@@ -1,0 +1,65 @@
+name: HYPR CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        threads: [1, 4]
+    env:
+      JULIA_NUM_THREADS: ${{ matrix.threads }}
+      JULIA_LOAD_PATH: '@:@stdlib'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+      - uses: julia-actions/cache@v2
+      - run: julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
+      - run: julia --project=. examples/bounded_search.jl
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+      - uses: julia-actions/cache@v2
+      - run: julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
+      - run: julia --project=docs docs/make.jl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: docs/build/
+  integration:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        order: [core-first, hypr-first]
+    env:
+      JULIA_NUM_THREADS: '4'
+      JULIA_LOAD_PATH: '@:@stdlib'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: Space-FALCON-Lab/SpaceAGORA.jl
+          ref: 9be384a20dfe28594a35341eed18e6fe945f1049
+          path: .integration-spaceagora
+          lfs: false
+          sparse-checkout: |
+            src
+            Project.toml
+            Manifest.toml
+          sparse-checkout-cone-mode: false
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+      - uses: julia-actions/cache@v2
+      - name: Install isolated integration environment
+        run: |
+          julia -e 'using Pkg; Pkg.activate(mktempdir(cleanup=false)); Pkg.develop([PackageSpec(path=pwd()), PackageSpec(path=".integration-spaceagora")]); write("integration-env.txt",dirname(Base.active_project()))'
+      - name: Run adapter without the compatibility shim
+        run: julia --project="$(cat integration-env.txt)" test/integration.jl ${{ matrix.order }}
