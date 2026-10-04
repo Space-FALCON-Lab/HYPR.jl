@@ -7,7 +7,7 @@ contract bindings, including historically underscored helper names, instead of
 whole internal simulator modules. Public configuration/result identities remain
 owned by SpaceAGORA.
 
-The local supported pair is HYPR 0.1.0 and SpaceAGORA with contract 1.0.0. Legacy
+The proposed pair is HYPR 0.1.0 and SpaceAGORA 0.2.0 with contract 1.0.0. Legacy
 `using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
 excluded by compatibility metadata and refused by the runtime activation check.
 Contract and provider versions are checked before source method definitions and
@@ -24,10 +24,20 @@ in SpaceAGORA's `docs/src/maintainer/hypr_services.md`. Aliases preserve origina
 function/type ownership. An incompatible contract change needs a coordinated
 version update and review.
 
-The candidates are local and have not been released. Repository source pins,
-published installation recipes, moved-code coverage and precompiled-stack checks
-remain release-integration requirements. A broad package version range alone is
-not evidence of compatibility with historical SpaceAGORA revisions.
+The candidates are local and have not been released. SpaceAGORA's
+`scripts/setup_hypr.jl` selects the full Git revision recorded in its
+`packages/SpaceAGORAHYPR/HYPRSource.toml`. The same helper serves unit tests,
+independent installation checks and the RPO example environment. An explicit
+`SPACEAGORA_HYPR_PATH` selects a local development checkout. Julia does not use a
+dependency's `[sources]` section transitively, so developing only the shim is not
+a supported recipe.
+
+CI builds the core, extension and shim images, then runs fresh processes with
+`--compiled-modules=strict --pkgimages=existing`. These witnesses require actual
+image use and test both orders, shim-first loading and sticky conflict refusal.
+A failed extension is refused before incomplete aliases are used. Published-URL
+installation and hosted results remain release requirements; local tests cannot
+supply that evidence.
 
 Shared geometry, metrics, RRT and retiming remain in SpaceAGORA. The standalone
 HYPR search core is independent; configured mission planning still consumes the

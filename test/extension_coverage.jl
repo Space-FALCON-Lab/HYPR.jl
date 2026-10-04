@@ -1,4 +1,5 @@
 using HYPR, SpaceAGORA, Test
+@test Base.get_extension(HYPR, :HYPRSpaceAGORAExt).initialized()
 # Run maintained SpaceAGORA consumer tests from the selected integration pair.
 # No test-source copies or native datasets are needed. Release pairing is R5.
 const SA = dirname(dirname(pathof(SpaceAGORA)))

@@ -18,6 +18,8 @@ jobs:
           version: '1.12'
       - uses: julia-actions/cache@v2
       - run: julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
+      - run: julia --project=. -e 'using Pkg; Pkg.precompile(["HYPR"]; strict=true)'
+      - run: julia --compiled-modules=strict --pkgimages=existing --project=. test/precompiled_loading.jl core
       - run: julia --project=. examples/bounded_search.jl
       - uses: actions/setup-python@v5
         with:
@@ -53,9 +55,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
-          # Reviewed contract candidate. R5 must publish/replace this identity
-          # with the supported immutable pair before release CI can run.
-          ref: a6899166c705603f94198d007309d783342b963c
+          # Reviewed service-provider commit; publish it before enabling release CI.
+          ref: 0d59e6c5422c725d1971f6b3d449fe2bd5f3c9e4
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
@@ -63,6 +64,7 @@ jobs:
             ext
             test
             packages/SpaceAGORAHYPR
+            scripts
             Project.toml
             Manifest.toml
           sparse-checkout-cone-mode: false
@@ -74,6 +76,16 @@ jobs:
         run: |
           julia --startup-file=no test/setup_integration.jl .integration-spaceagora .integration-env
           julia --startup-file=no -e 'using Pkg; Pkg.activate(".coverage-core"); Pkg.develop(path=pwd())'
+      - name: Precompile core, extension and compatibility shim
+        run: julia --project=.integration-env -e 'using Pkg; Pkg.precompile(["SpaceAGORA", "HYPR", "SpaceAGORAHYPR"]; strict=true)'
+      - name: Verify compiled loading and refusal
+        run: |
+          julia --compiled-modules=strict --pkgimages=existing --project=.integration-env test/precompiled_loading.jl ${{ matrix.order }}
+          julia --compiled-modules=strict --pkgimages=existing --project=.integration-env test/precompiled_loading.jl shim-first
+          julia --compiled-modules=strict --pkgimages=existing --project=.integration-env test/precompiled_conflicts.jl conflict-first
+          julia --compiled-modules=strict --pkgimages=existing --project=.integration-env test/precompiled_conflicts.jl hypr-first
+      - name: Verify incompatible resolution
+        run: julia --project=.integration-env test/incompatible_resolution.jl .integration-spaceagora
       - name: Run adapter without the compatibility shim
         run: julia --project=.integration-env test/integration.jl ${{ matrix.order }}
       - uses: actions/setup-python@v5

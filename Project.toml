@@ -18,7 +18,7 @@ HYPRSpaceAGORAExt = "SpaceAGORA"
 
 [compat]
 SpaceAGORAHYPR = "0.2"
-SpaceAGORA = "0.1"
+SpaceAGORA = "0.2"
 StaticArrays = "1"
 julia = "1.12"
 
