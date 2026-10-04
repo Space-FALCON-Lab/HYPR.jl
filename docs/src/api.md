@@ -33,3 +33,24 @@ best is found, `gbest_components` remains `nothing`; the caller must report fail
 and must not treat the zero-initialized best vector as a solution. Objective and
 policy exceptions propagate. NaN costs never improve a best. The API does not
 claim general checkpoint/restart support; a new search uses a new state.
+
+## Checked standalone inputs
+
+`search!` validates settings even when constructed positionally. All buffers must
+have matching nonempty dimensions and must not alias; initial positions must be
+finite and within the supplied bounds, and velocities must be finite. A state is
+marked started before its first objective call, so an exception cannot make a
+partially evaluated state reusable. Build a new state after any started search.
+Callbacks must not resize buffers or change ownership while search is executing.
+The early-stopping `feasible` callback must accept `nothing` when no finite best
+exists.
+
+`advance_particles!` checks dimensions, finite buffers and weights, ordered bounds
+and one distinct RNG object per particle before mutation or draws. Separate RNGs
+may have equal seeds; object-identity checks cannot prove statistical independence.
+The caller owns stream selection. Initial positions may lie outside the update
+bounds; this low-level movement clamps their next positions. The higher-level
+`search!` requires in-bounds initialization.
+
+The preserved legacy adapters use private kernels with their established
+validation policy. Those kernels are not part of the standalone public API.

@@ -48,3 +48,18 @@ end
     @test isempty(source_boundary_violations("src/HYPR.jl","include(\"search.jl\")"))
     @test isempty(source_boundary_violations("ext/HYPRSpaceAGORAExt.jl","import SpaceAGORA"))
 end
+
+@testset "Versioned SpaceAGORA service boundary" begin
+    for (dir, _, files) in walkdir(joinpath(@__DIR__, "..", "ext")), file in files
+        endswith(file,".jl") || continue
+        source=read(joinpath(dir,file),String)
+        @test !occursin(r"SpaceAGORA\.(?!HYPRServices\b)[A-Za-z_]",source)
+    end
+end
+
+@testset "Service boundary spelling controls" begin
+    pattern=r"SpaceAGORA\.(?!HYPRServices\b)[A-Za-z_]"
+    @test occursin(pattern,"SpaceAGORA.SimulationModel.GuidanceHooks")
+    @test !occursin(pattern,"SpaceAGORA.HYPRServices.RPO")
+    @test !occursin(pattern,"Planning for SpaceAGORA.")
+end

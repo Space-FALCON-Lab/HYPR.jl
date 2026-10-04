@@ -1,26 +1,34 @@
 # SpaceAGORA integration
 
-The candidate uses a Julia package extension. `using HYPR` alone does not install
-or load SpaceAGORA. When both packages are loaded, `HYPRSpaceAGORAExt` installs the
-existing domain methods and activates SpaceAGORA's HYPR availability bridge.
-Both load orders are supported. Loading HYPR in one process does not load it on
-separate worker processes.
+`using HYPR` alone neither installs nor loads SpaceAGORA. When both packages are
+loaded, `HYPRSpaceAGORAExt` provides the existing configured RPO and robot-arm
+methods through `SpaceAGORA.HYPRServices` contract 1.0.0. It imports explicit
+contract bindings, including historically underscored helper names, instead of
+whole internal simulator modules. Public configuration/result identities remain
+owned by SpaceAGORA.
 
-The integration is reviewed against SpaceAGORA commit
-`9be384a20dfe28594a35341eed18e6fe945f1049`. Its current 0.1 compatibility range is
-not evidence of compatibility with every historical 0.1 revision. The extension
-imports existing internal contracts, so a released pairing policy and an explicit
-mismatch check remain publication requirements.
+The local supported pair is HYPR 0.1.0 and SpaceAGORA with contract 1.0.0. Legacy
+`using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
+excluded by compatibility metadata and refused by the runtime activation check.
+Contract and provider versions are checked before source method definitions and
+again during initialization. Only successful activation makes HYPR available.
+Both load orders are supported.
 
-The accompanying SpaceAGORA change makes `SpaceAGORAHYPR` a thin compatibility
-package depending on HYPR and SpaceAGORA. Existing `using SpaceAGORAHYPR` users
-retain their entry point and public configuration/result types. Do not load the
-old implementation-bearing companion together with this candidate: it defines
-the same methods. Use the matched compatibility shim or load HYPR directly with
-the pinned SpaceAGORA core.
+A failed mixed load may already have defined methods because Julia does not roll
+back package initialization. Discard that process. Availability and planning
+preflight remain refused after a conflict; do not catch the error and continue
+using imported planner methods. Each worker process needs its own supported load.
 
-RPO geometry, dynamics, references and robot-arm models remain supplied by
-SpaceAGORA. Its core keeps shared path, metric, RRT and retiming services for other
-algorithms. This extraction does not make those domain models independently
-available outside the simulator. A future domain-neutral path API is distinct
-work requiring a consumer-driven contract and independent review.
+The contract and its complete consumed/implemented binding inventory are documented
+in SpaceAGORA's `docs/src/maintainer/hypr_services.md`. Aliases preserve original
+function/type ownership. An incompatible contract change needs a coordinated
+version update and review.
+
+The candidates are local and have not been released. Repository source pins,
+published installation recipes, moved-code coverage and precompiled-stack checks
+remain release-integration requirements. A broad package version range alone is
+not evidence of compatibility with historical SpaceAGORA revisions.
+
+Shared geometry, metrics, RRT and retiming remain in SpaceAGORA. The standalone
+HYPR search core is independent; configured mission planning still consumes the
+simulator's geometry, dynamics and reference services.

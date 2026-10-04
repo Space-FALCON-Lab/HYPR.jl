@@ -663,7 +663,7 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
         end
 
         weights = rpo_pso_iteration_weights(cfg, iter)
-        HYPR.advance_particles!(positions, velocities, pbest, gbest,
+        HYPR._advance_particles!(positions, velocities, pbest, gbest,
             lo_rep, hi_rep, weights, particle_rngs)
         if iteration_timed_out(iter_start_ns)
             record_iteration_timeout!(iter, :velocity_update, iter_start_ns)

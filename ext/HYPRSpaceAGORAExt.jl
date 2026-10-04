@@ -1,8 +1,12 @@
 """Optional HYPR search and configured planning for SpaceAGORA."""
 module HYPRSpaceAGORAExt
 import SpaceAGORA
+import HYPR
+const PROVIDER_VERSION = Base.pkgversion(HYPR)
+isdefined(SpaceAGORA, :HYPRServices) || error("HYPR requires SpaceAGORA HYPRServices contract 1.0.0. Install the supported version pair.")
+SpaceAGORA.HYPRServices.check_provider(:HYPR, PROVIDER_VERSION, v"1.0.0")
 module SwarmPolicy
-import SpaceAGORA.SimulationModel.HYPRUtils: hypr_iteration_weights, hypr_material_improvement, hypr_protected_particle_mask
+import SpaceAGORA.HYPRServices.SwarmPolicy: hypr_iteration_weights, hypr_material_improvement, hypr_protected_particle_mask
 import HYPR
 include("policy_compatibility.jl")
 end
@@ -10,11 +14,11 @@ module RPO
 import HYPR
 import SpaceAGORA
 using LinearAlgebra, Random, StaticArrays
-using SpaceAGORA.SimulationModel.HYPRUtils
+
 using Logging: Logging
 using Base.Threads: @threads, maxthreadid, threadid
-using SpaceAGORA.SimulationModel.NavigationHooks
-import SpaceAGORA.SimulationModel.GuidanceHooks:
+using SpaceAGORA.HYPRServices.RPO: hypr_iteration_weights, hypr_material_improvement, hypr_protected_particle_mask, rpo_clearance_distance_to_station, rpo_path_clearance_stats
+import SpaceAGORA.HYPRServices.RPO:
     RPOAdaptiveSamplingSettings,
     RPOPSOConfig,
     RPORRTConnectSettings,
@@ -112,9 +116,9 @@ module RobotArm
 import HYPR
 import SpaceAGORA
 using LinearAlgebra, Random, StaticArrays
-using SpaceAGORA.SimulationModel.HYPRUtils
-using SpaceAGORA.SimulationModel.Robotics
-import SpaceAGORA.SimulationModel.RobotArmPlanning:
+
+using SpaceAGORA.HYPRServices.RobotArm: hypr_iteration_weights, hypr_material_improvement, hypr_rrt_join_paths, hypr_rrt_nearest_index, hypr_rrt_steer, ClothArmBasePose, ClothArmModel, cloth_fk, cloth_ik
+import SpaceAGORA.HYPRServices.RobotArm:
     RobotArmHYPRConfig,
     RobotArmHYPRResult,
     RobotArmPlan,
@@ -170,13 +174,13 @@ end
 module PlannerAdapter
 using LinearAlgebra: norm
 import SpaceAGORA
-const P = SpaceAGORA.RPOPlannerInterfaces
-const S = SpaceAGORA.SimulationModel
-const G = S.GuidanceHooks
-import SpaceAGORA.HYPRRPOPlanning: HYPRRPOPlanner, _plan_hypr_rpo!
+const P = SpaceAGORA.HYPRServices.Planner
+const S = SpaceAGORA.HYPRServices.RPO
+const G = S
+import SpaceAGORA.HYPRServices.Planner: HYPRRPOPlanner, _plan_hypr_rpo!
 include("rpo_planner_execution.jl")
 end
 function __init__()
-    SpaceAGORA.SimulationModel.HYPRSupport.activate!()
+    SpaceAGORA.HYPRServices.activate!(:HYPR, PROVIDER_VERSION, v"1.0.0")
 end
 end

@@ -67,3 +67,5 @@ end
 end
 
 include("source_boundaries.jl")
+
+include("input_safety.jl")

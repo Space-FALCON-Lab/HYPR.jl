@@ -224,7 +224,7 @@ function _robot_arm_hypr_cloth_base_wrench_ratios(
     t_ref::AbstractVector{<:Real},
     cfg::RobotArmHYPRConfig,
 )
-    parent = SpaceAGORA.SimulationModel
+    parent = SpaceAGORA.HYPRServices.Cloth
     if !isdefined(parent, :ClothRobotArmDynamics) || !isdefined(parent, :ClothMultibody)
         return _robot_arm_hypr_rigid_base_wrench_ratios(model, base_pose, q_ref, t_ref, cfg)
     end
