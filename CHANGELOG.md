@@ -6,5 +6,11 @@
 - Preserve the existing RPO and robot-arm implementations in an optional SpaceAGORA extension.
 - Retain the historical companion entry point through a separate compatibility shim.
 - Add standalone examples, API documentation and tests.
+- Refuse started or failed standalone search states, invalid positional settings,
+  out-of-bounds initialization, mismatched or aliased buffers, and shared RNG objects
+  before execution. Bounds must be vectors; tuple bounds are no longer accepted.
+- Document callback mutation limits and caller-owned RNG stream independence.
+- Pin accepted arithmetic and RNG consumption in HYPR-owned regression tests.
+- Measure core and extension coverage together at 90% overall and 80% per file.
 
 External installation, independent review, cross-repository CI and publication are pending.

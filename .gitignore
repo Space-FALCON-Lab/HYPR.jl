@@ -1,3 +1,9 @@
 /Manifest.toml
 /docs/Manifest.toml
 /docs/build/
+
+# Local integration and coverage output
+.integration-*/
+.coverage-core/
+*.cov
+__pycache__/

@@ -38,5 +38,8 @@ these differences. This compatibility path is internal, not a second public API.
 
 The CI definition is an unexecuted candidate until this repository is published.
 Its standalone, docs and integration jobs do not yet replace SpaceAGORA's full
-coverage campaign. The release gate requires coverage ownership for every moved
-file with the existing thresholds unchanged.
+coverage campaign. HYPR now owns arithmetic regression tests and a complete
+`src/` plus `ext/` coverage gate, at 90% overall and 80% per executable file.
+The local gate uses the reviewed SpaceAGORA contract candidate; publication of
+that pairing, precompiled loading checks and fresh hosted CI remain separate
+release requirements.
