@@ -11,6 +11,6 @@ owner in the core and compatibility forwarders in the extension. The robot-arm
 iteration loop now calls the standalone core search; RPO calls its core movement
 kernel. The source comparison and retained seeded results identify these changes.
 
-This package candidate adds no authorship claims or unverified publication links.
+This package adds no authorship claims or unverified publication links.
 A formal manuscript citation should be added only from an approved bibliographic
-record, rather than inferred from filenames or an agent summary.
+record, rather than inferred from filenames or an unverified summary.

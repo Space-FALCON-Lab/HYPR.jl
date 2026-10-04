@@ -9,7 +9,7 @@ the optional extension. These variants are not silently unified.
 The accepted comparison consists of four bounded RPO cases and two robot-arm
 cases, including the random values consumed after each result. Its serialized
 fingerprint is `9b25466fd812cf70330d3379a7b2071bcea0b93c3c364051959e698cdc3aed38`.
-The candidate reproduces that fingerprint byte-for-byte. Larger integration and
+The extracted implementation reproduces that fingerprint byte-for-byte. Larger integration and
 independent review are separately recorded; this hash is not full mission,
 performance, arbitrary-thread, native atmosphere or paper-claim acceptance.
 
@@ -75,7 +75,7 @@ files, counts and thresholds. `python3 test/test_coverage_gate.py` checks the ga
 rejection of low coverage, missing or stale counters, omitted source, unmeasured
 functions and failed test stages.
 
-The CI definition uses the reviewed SpaceAGORA contract candidate. Its published
-installation pairing is a separate release prerequisite. Until that pair is
-published and fresh hosted CI passes, local passing results are not hosted CI or
-release acceptance.
+CI uses the reviewed SpaceAGORA service-provider revision. Published-source
+installation and passing hosted CI on the release pair are separate requirements.
+The release record and integration PR identify that pair and its results; local
+passing results alone are not release acceptance.

@@ -16,18 +16,22 @@ in SpaceAGORA retain their owners. Methods implemented by the companion now live
 in the extension's corresponding modules. No general serialized Julia object
 compatibility beyond the retained comparison is claimed.
 
-## Release sequence
+## Supported migration
 
-1. Independently review this package boundary and the changed search loop.
-2. Verify clean installation from a Git commit without sibling-path assumptions.
-3. Publish the reviewed HYPR repository and a versioned prerelease.
-4. Pin SpaceAGORA's shim, example setup and CI to that package identity.
-5. Complete coverage ownership for moved files, preserving 90% overall and 80%
-   per-file limits; run both repositories' CI and installation matrix. The
-   package-applicable source-boundary rules already run in this candidate.
-6. Merge the reviewed integration and verify combined main before closing H6.
+1. Use the SpaceAGORA 0.2 service-provider revision identified by the integration
+   release or PR. HYPR 0.1 does not support SpaceAGORA or shim 0.1.
+2. Run SpaceAGORA's `scripts/setup_hypr.jl` in a separate project. It installs the
+   immutable HYPR revision declared by that SpaceAGORA checkout.
+3. Load `SpaceAGORA` and the `SpaceAGORAHYPR` compatibility shim in that project.
+   Existing configured entry points remain accessible through their original
+   SpaceAGORA names. Applications using only the numerical search core load
+   `HYPR` directly and do not install SpaceAGORA.
+4. Preserve the resolved manifest with experiment records. Verify the supported
+   example and the applicable scientific limits before using a new configuration.
 
-The candidate is not ready to replace a production release until these gates pass.
+A repository publication alone does not establish integrated simulator acceptance.
+Consult the release record and integration PR for the tested revision pair and
+hosted results.
 
 ## Compatibility validation
 
@@ -36,10 +40,9 @@ robot-arm adapter keeps its existing validation policy, including accepted edge
 settings, through a private core entry point. The matched reference matrix covers
 these differences. This compatibility path is internal, not a second public API.
 
-The CI definition is an unexecuted candidate until this repository is published.
-Its standalone, docs and integration jobs do not yet replace SpaceAGORA's full
-coverage campaign. HYPR now owns arithmetic regression tests and a complete
-`src/` plus `ext/` coverage gate, at 90% overall and 80% per executable file.
-The local gate uses the reviewed SpaceAGORA contract candidate; publication of
-that pairing, precompiled loading checks and fresh hosted CI remain separate
-release requirements.
+HYPR owns arithmetic regression tests and a complete `src/` plus `ext/` coverage
+gate, at 90% overall and 80% per executable file. Its core, documentation and
+integration jobs exercise the versioned service provider. SpaceAGORA retains its
+own full regression and coverage requirements. Releases require passing hosted
+checks, published-source installation and integration verification; results from
+a local checkout are recorded separately.

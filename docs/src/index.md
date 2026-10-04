@@ -4,11 +4,18 @@ HYPR owns the search algorithm. The core works with numerical particle arrays
 and explicit policy functions. No simulator is installed or loaded by the core.
 An optional extension provides the existing RPO and robot-arm domain adapters.
 
-## Installation status
+## Installation
 
-This is a local extraction candidate. Follow the checkout instructions in the
-README. Public URL and version-tag installation will be documented after review
-and publication. Do not infer registry availability from the package name.
+HYPR 0.1.0 is an initial prerelease for Julia 1.12. Install the versioned source
+into a separate project:
+
+```sh
+julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.1.0")'
+```
+
+Run Julia with `--project=hypr-demo` and load `HYPR`. The core does not need a
+SpaceAGORA checkout. The package is not registered in General. For the executable
+example and test suite, use the repository checkout instructions in the README.
 
 ## First example
 
