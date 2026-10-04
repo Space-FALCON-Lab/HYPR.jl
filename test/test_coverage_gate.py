@@ -36,6 +36,26 @@ class GateTests(unittest.TestCase):
     def test_unmeasured_function_cannot_vanish(self):
         p=self.root/"ext/adapter.jl.1.cov";p.write_text(p.read_text().replace("        1 ","        - "))
         self.assertTrue(any("Unmeasured function" in s for s in self.result()["failures"]))
+    def closure_fixture(self,kind,measured):
+        source = {"->": "callback = x ->\n    x + 1\n", "do": "map(Int[]) do x\n    x + 1\nend\n", "function": "callback = function (x)\n    x + 1\nend\n"}[kind]
+        p=self.root/"ext/adapter.jl";p.write_text(source)
+        self.manifest["sources"]["ext/adapter.jl"]=dict(sha256=hashlib.sha256(p.read_bytes()).hexdigest(),functions=[dict(first=2,last=2,label="closure body",kind=kind)],module_wiring_only=False)
+        counts=["1", "1" if measured else "-"]+["-"]*(len(source.splitlines())-2)
+        (p.parent/(p.name+".1.cov")).write_text("".join(f"{count:>9} "+line for count,line in zip(counts,source.splitlines(keepends=True))))
+    def test_unmeasured_arrow_body_cannot_hide_behind_creation(self):
+        self.closure_fixture("->",False)
+        self.assertTrue(any("Unmeasured function" in s for s in self.result()["failures"]))
+    def test_unmeasured_do_body_cannot_hide_behind_call(self):
+        self.closure_fixture("do",False)
+        self.assertTrue(any("Unmeasured function" in s for s in self.result()["failures"]))
+    def test_unmeasured_anonymous_function_cannot_hide_behind_creation(self):
+        self.closure_fixture("function",False)
+        self.assertTrue(any("Unmeasured function" in s for s in self.result()["failures"]))
+    def test_measured_closure_bodies_pass(self):
+        for kind in ("->","do","function"):
+            with self.subTest(kind=kind):
+                self.closure_fixture(kind,True)
+                self.assertTrue(self.result()["passed"])
     def test_zero_counts_are_not_execution(self):
         self.add("ext/adapter.jl",10,0);self.assertFalse(self.result()["passed"])
     def test_stale_output_is_refused(self):

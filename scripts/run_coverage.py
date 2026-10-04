@@ -24,6 +24,8 @@ def main():
     for threads in (1,4):
         commands.append(("core_t"+str(threads),[julia,*flags,"--check-bounds=yes","--code-coverage=@"+str(root),"--project="+core_project,str(root/"test/runtests.jl")],threads))
     commands.append(("extension",[julia,*flags,"--code-coverage=@"+str(root),"--project="+integration_project,str(root/"test/extension_coverage.jl")],4))
+    # The callback contract uses a test-only observer method in a fresh process.
+    commands.append(("rrt_callback_contract",[julia,*flags,"--code-coverage=@"+str(root),"--project="+integration_project,str(root/"test/rrt_callback_contract.jl")],1))
     import sys
     commands.append(("gate",[sys.executable,str(root/"scripts/coverage_gate.py"),str(out/"sources.toml"),str(out/"report.json")],1))
     for name,cmd,threads in commands:

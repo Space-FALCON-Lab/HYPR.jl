@@ -45,9 +45,21 @@ also compare the configured sampling wrappers with their shared kernels.
 The gate requires **90% overall and 80% in every executable file**. No moved file
 is excluded. `src/HYPR.jl` is module wiring with no measured executable lines;
 its inventory entry remains visible without a fabricated percentage. Julia can
-leave a never-compiled function unmeasured, so a parsed function whose entire body
-has no counters is rejected rather than silently omitted from the denominator.
+leave a never-compiled function unmeasured, so named functions, anonymous
+`function` forms, arrow closures and `do` callbacks are inventoried. An entirely
+unmeasured body is rejected rather than silently omitted from the denominator.
+For closures the inspected span is the body, excluding a separate creation or
+call line. Named definitions include their declaration line because Julia can
+attribute a short-form body to that line. This remains line coverage: expressions sharing a source
+line cannot be distinguished by line counters alone.
 These are line-coverage checks, not branch coverage or scientific acceptance.
+
+The configured RRT* wrapper always supplies a refinement callback, so its
+fallback cost callback is not exercised by normal configured runs. A separate
+process tests that supplied callback against the configured polyline objective,
+then delegates to the unchanged shared engine. Its observer method exists only
+in that test process. This checks the callback contract; it does not establish a
+production fallback path for configured RRT*.
 
 Run against separate core and integration environments:
 

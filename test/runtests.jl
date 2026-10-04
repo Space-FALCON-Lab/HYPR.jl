@@ -71,3 +71,5 @@ include("source_boundaries.jl")
 include("input_safety.jl")
 
 include("arithmetic_regressions.jl")
+
+include("coverage_inventory.jl")
