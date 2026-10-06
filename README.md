@@ -5,12 +5,12 @@ core exposes particle-swarm search with explicit objective, culling and stopping
 policies. It can run without SpaceAGORA. The optional extension retains the
 existing spacecraft RPO and robot-arm specializations when SpaceAGORA is loaded.
 
-**Version:** 0.1.0, the initial prerelease, for Julia 1.12. Scientific acceptance
+**Version:** 0.1.1, the optional-objective prerelease, for Julia 1.12. Scientific acceptance
 is limited to the tests and matched results described in the validation guide.
 Install from the versioned Git source; the package is not registered in General.
 
 ```sh
-julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.1.0")'
+julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.1.1")'
 ```
 
 The standalone core needs no SpaceAGORA checkout. Configured RPO and robot-arm

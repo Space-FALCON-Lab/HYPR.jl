@@ -56,7 +56,7 @@ jobs:
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
           # Reviewed service-provider commit; publish it before enabling release CI.
-          ref: 0d59e6c5422c725d1971f6b3d449fe2bd5f3c9e4
+          ref: 8a979873ad0ed17045a9080347b13f944c176079
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
@@ -86,6 +86,15 @@ jobs:
           julia --compiled-modules=strict --pkgimages=existing --project=.integration-env test/precompiled_conflicts.jl hypr-first
       - name: Verify incompatible resolution
         run: julia --project=.integration-env test/incompatible_resolution.jl .integration-spaceagora
+      - uses: actions/checkout@v7
+        with:
+          repository: Space-FALCON-Lab/SpaceAGORA.jl
+          ref: fa2e4a411c16c0587230b2020881a36065887b07
+          path: .comparison-source
+          lfs: false
+          sparse-checkout: SpaceAGORA_RL.jl/src
+      - name: Verify pinned original and retimed-fuel comparison routes
+        run: julia --project=.integration-env test/jakob_comparison.jl .comparison-source/SpaceAGORA_RL.jl/src
       - name: Run adapter without the compatibility shim
         run: julia --project=.integration-env test/integration.jl ${{ matrix.order }}
       - uses: actions/setup-python@v5

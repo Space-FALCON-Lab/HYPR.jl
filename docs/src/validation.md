@@ -79,3 +79,19 @@ CI uses the reviewed SpaceAGORA service-provider revision. Published-source
 installation and passing hosted CI on the release pair are separate requirements.
 The release record and integration PR identify that pair and its results; local
 passing results alone are not release acceptance.
+
+## RPO objective compatibility (0.1.1)
+
+`test/custom_objective.jl` checks callback ranking, the straight-path branch,
+all refinement operations, result metadata, malformed returns and default-mode
+regressions against HYPR 0.1.0 at `6b2af3b4129907d76f6cdc873267a57445c1334b`.
+Eight fixed legacy/manuscript cases retain path, cost, components, cost history,
+refinement status and exact RNG consumption. Floating results allow 1e-12
+absolute/relative tolerance across numerical-library platforms.
+
+`test/jakob_comparison.jl` runs the unmodified CPU comparison consumer from
+SpaceAGORA commit `fa2e4a411c16c0587230b2020881a36065887b07`; its complete source
+inventory is hash-checked. Clear, bounded zero/one-waypoint cases exercise both
+original and retimed-fuel PSO routes and their actual terminal coupled tracker.
+The 0.00625 m/s² acceleration limit follows the existing comparison configuration.
+This verifies compatibility, not the paper's complete campaign or RL training.

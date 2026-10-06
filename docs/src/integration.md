@@ -7,7 +7,8 @@ contract bindings, including historically underscored helper names, instead of
 whole internal simulator modules. Public configuration/result identities remain
 owned by SpaceAGORA.
 
-The version pair is HYPR 0.1.0 and SpaceAGORA 0.2.0 with contract 1.0.0. Legacy
+HYPR 0.1.1 requires a SpaceAGORA 0.2.0 revision explicitly accepting provider
+0.1.1 under service contract 1.0.0. That consumer also accepts HYPR 0.1.0. Legacy
 `using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
 excluded by compatibility metadata and refused by the runtime activation check.
 Contract and provider versions are checked before source method definitions and
@@ -43,3 +44,29 @@ the version pair; local tests alone do not supply that evidence.
 Shared geometry, metrics, RRT and retiming remain in SpaceAGORA. The standalone
 HYPR search core is independent; configured mission planning still consumes the
 simulator's geometry, dynamics and reference services.
+
+## Optional RPO objective
+
+`rpo_pso_plan_path(...; objective_evaluator=callback)` lets a caller choose the
+objective used by ordinary HYPR PSO. The same callback scores initial particles,
+search updates, post-refinement proposals and final reporting. Omitting it, or
+passing `nothing`, retains the selected legacy or manuscript objective and policy.
+Standalone HYPR and robot-arm planning are unchanged.
+
+The callable signature is `callback(points, geometry, cfg, safe_distance, cutoff)`.
+The last two arguments are `Float64`. Return a component object with `total`,
+`J_obs` and `violation_count`; extra metadata is retained in the planner result.
+The caller owns the objective and must report collision/feasibility components
+accurately. Refinement still refuses an increase in `J_obs`. The cutoff is an
+optional pruning bound in the callback's own objective units; use it only when
+pruning is valid for that objective. Callbacks can run concurrently and must be
+thread-safe, avoid mutating inputs, and be deterministic for reproducible runs.
+Exceptions propagate rather than silently falling back to the standard objective.
+Direct `rpo_post_refine_path` calls accept the same optional keyword.
+
+This restores the callback route from Jakob's August 26 SpaceAGORA commit
+`fa2e4a411c16c0587230b2020881a36065887b07`. Its comparison consumer uses ordinary
+HYPR with a retimed fuel and wheel objective, then separately evaluates the
+returned trajectory with coupled tracking. It does not add RL training to HYPR.
+The internal dispatch helper is package-owned; no new SpaceAGORA service binding
+or standalone public export is introduced.
