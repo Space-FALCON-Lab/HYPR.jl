@@ -1,6 +1,6 @@
 name = "HYPR"
 uuid = "342c8629-b435-4bda-9d24-004c735fb297"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Space-FALCON Lab contributors"]
 
 [deps]

@@ -16,3 +16,5 @@ for path in INTEGRATION_CASES
 end
 
 include("sampling_compatibility.jl")
+
+include("custom_objective.jl")

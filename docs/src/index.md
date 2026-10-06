@@ -6,11 +6,11 @@ An optional extension provides the existing RPO and robot-arm domain adapters.
 
 ## Installation
 
-HYPR 0.1.0 is an initial prerelease for Julia 1.12. Install the versioned source
+HYPR 0.1.1 is an optional-objective prerelease for Julia 1.12. Install the versioned source
 into a separate project:
 
 ```sh
-julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.1.0")'
+julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.1.1")'
 ```
 
 Run Julia with `--project=hypr-demo` and load `HYPR`. The core does not need a
