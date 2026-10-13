@@ -1,5 +1,11 @@
 # Validation and limits
 
+The [method and paper guide](method.md) identifies the confirmed HyPR manuscript
+and separates its static and dynamic experiments from software validation.
+The tests described here do not reproduce those campaigns. In particular, the
+current research comparison tracker and random-seed protocol still need to be
+reconciled with the manuscript before claiming agreement with its aggregate results.
+
 The extraction preserves source calculations and operation order, with a targeted
 exception: search code is called through the new package boundary. The standalone
 serial search is extracted from the robot-arm loop. RPO calls the core particle

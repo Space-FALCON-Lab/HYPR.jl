@@ -32,6 +32,7 @@ new spacecraft maneuver, robot-arm accuracy envelope or paper reproduction.
 ## Read the documentation
 
 - [Getting started](docs/src/index.md)
+- [HYPR and the spacecraft method](docs/src/method.md)
 - [Search API and ownership](docs/src/api.md)
 - [SpaceAGORA integration](docs/src/integration.md)
 - [Validation and limitations](docs/src/validation.md)
@@ -44,6 +45,9 @@ julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
 julia --project=docs docs/make.jl
 ```
 
-See [PROVENANCE.md](PROVENANCE.md) for source attribution and the retained MIT
-license. Use the release commit as the software citation until a verified
-manuscript/DOI citation is supplied; no bibliographic identity is invented here.
+For the method, cite Gorisek-Gazze and Falcone, “HyPR: Safety- and Fuel-Aware
+Motion Planning and Replanning for Autonomous SmallSat Servicing,” accepted to
+iSpaRo 2026. The [method and citation page](docs/src/method.md) gives the full
+reference and distinguishes the paper's results from current software validation.
+Also record the exact software revision used in an experiment. See
+[PROVENANCE.md](PROVENANCE.md) for source attribution and the retained MIT license.
