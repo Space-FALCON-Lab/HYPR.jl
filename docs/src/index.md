@@ -4,6 +4,10 @@ HYPR owns the search algorithm. The core works with numerical particle arrays
 and explicit policy functions. No simulator is installed or loaded by the core.
 An optional extension provides the existing RPO and robot-arm domain adapters.
 
+The [method guide](method.md) explains how the numerical search library relates
+to spacecraft motion planning, with the confirmed paper citation and the scope
+of the current validation.
+
 ## Installation
 
 HYPR 0.1.1 is an optional-objective prerelease for Julia 1.12. Install the versioned source

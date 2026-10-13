@@ -21,7 +21,11 @@ preflight remain refused after a conflict; do not catch the error and continue
 using imported planner methods. Each worker process needs its own supported load.
 
 The contract and its complete consumed/implemented binding inventory are documented
-in SpaceAGORA's `docs/src/maintainer/hypr_services.md`. Aliases preserve original
+in SpaceAGORA's [public service reference](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/b97d9dfe46d04b1a04b44c42f7f8a7da1363cee2/docs/src/maintainer/hypr_services.md).
+The accompanying [motion-planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/b97d9dfe46d04b1a04b44c42f7f8a7da1363cee2/docs/src/user/hypr_planning.md)
+introduces configuration, coordinate conventions and the paper's relationship to
+the current research examples. These documentation links do not change the
+integration source pins below. Aliases preserve original
 function/type ownership. An incompatible contract change needs a coordinated
 version update and review.
 
