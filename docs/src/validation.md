@@ -123,3 +123,20 @@ those historical fixtures remain evidence of the prior implementation.
 
 Passing local tests does not establish independent review, publication, hosted
 validation or reproduction of the 500-case and 800-case paper campaigns.
+
+
+The paired SpaceAGORA delivery includes `docs/src/user/hypr_paper.md` and runnable
+`Earth_RPO_HyPR_FinalISpaRo_Reconstruction.jl` / `Replanning.jl` examples. The guide
+maps the paper algorithm to code, supplies a saved reconstructed baseline and
+separates execution, clearance, target and fuel outcomes. The late directly-ahead
+obstacle failure is a reconstructed stress case, not a failure reported in
+Table III. Its appearance can leave insufficient stopping margin; the failed
+outcome remains counted even if a replacement route reaches the goal. Consult
+the guide for the model assumptions and unrecovered original experiment inputs.
+
+The delivery CI provider is SpaceAGORA commit
+`e98605617e5b04e7f7163095f527c010b9a5398b`. Its companion pins HYPR runtime
+`80a4f53a2fb893989c0ad54093b442a90f88aa7e`; the later HYPR delivery changes only
+this validation guide and the CI provider pin. Publish that runtime, then the
+SpaceAGORA provider, then this CI configuration so all pinned commits are
+reachable before their dependent hosted checks start.
