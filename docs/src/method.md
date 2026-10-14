@@ -46,7 +46,7 @@ dynamics, reference services and simulation lifecycle. Loading the extension
 uses the versioned `SpaceAGORA.HYPRServices` contract, not arbitrary simulator
 internals. The [integration guide](integration.md) describes installation and
 the optional objective callback. For a complete spacecraft configuration, use
-SpaceAGORA's [motion-planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/b97d9dfe46d04b1a04b44c42f7f8a7da1363cee2/docs/src/user/hypr_planning.md).
+SpaceAGORA's [motion-planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/388b8801b3e912c264b04a462b019acbaf1c0d1a/docs/src/user/hypr_planning.md).
 
 ## Reading the paper alongside the software
 

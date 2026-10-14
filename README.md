@@ -1,53 +1,74 @@
 # HYPR.jl
 
-HYPR owns the search implementation and its optional SpaceAGORA adapters. The
-core exposes particle-swarm search with explicit objective, culling and stopping
-policies. It can run without SpaceAGORA. The optional extension retains the
-existing spacecraft RPO and robot-arm specializations when SpaceAGORA is loaded.
+HYPR searches for motion paths for spacecraft rendezvous and robot arms in
+SpaceAGORA. It improves candidate paths with particle-swarm optimization;
+SpaceAGORA supplies the geometry, physical models and simulation. The numerical
+search library also works on its own with an objective supplied by the caller.
 
-**Version:** 0.1.1, the optional-objective prerelease, for Julia 1.12. Scientific acceptance
-is limited to the tests and matched results described in the validation guide.
-Install from the versioned Git source; the package is not registered in General.
+The spacecraft method is described in *HyPR: Safety- and Fuel-Aware Motion
+Planning and Replanning for Autonomous SmallSat Servicing*. The package's
+validation covers selected search and integration cases. Reproducing the paper's
+complete static and dynamic campaigns remains separate work.
+
+## Install
+
+HYPR **0.1.1** is a prerelease for **Julia 1.12** and is not registered in General.
+For the standalone numerical search, install the versioned source:
 
 ```sh
 julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.1.1")'
 ```
 
-The standalone core needs no SpaceAGORA checkout. Configured RPO and robot-arm
-planning requires the compatible SpaceAGORA installation described below.
+For spacecraft or robot-arm planning, use the
+[SpaceAGORA setup instructions](docs/src/integration.md#install-with-spaceagora).
+They install the compatible packages together in a separate environment.
 
-## Run the standalone example
+## Try a first example
 
-From a checkout of this repository:
+To explore the standalone API, clone this repository and run the small search:
 
 ```sh
+git clone https://github.com/Space-FALCON-Lab/HYPR.jl.git
+cd HYPR.jl
 julia --project=. -e 'using Pkg; Pkg.instantiate()'
 julia --project=. examples/bounded_search.jl
-julia --project=. -e 'using Pkg; Pkg.test()'
 ```
 
-The example minimizes a dimensionless quadratic. It demonstrates the API, not a
-new spacecraft maneuver, robot-arm accuracy envelope or paper reproduction.
+It prints the best position and cost for a dimensionless quadratic. For a
+physical planning example, follow the [robot-arm walkthrough](docs/src/robot_arm.md):
+define an arm and target, create a timed joint reference, and inspect its endpoint
+error. For spacecraft rendezvous, start with SpaceAGORA's
+[HYPR planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/388b8801b3e912c264b04a462b019acbaf1c0d1a/docs/src/user/hypr_planning.md).
 
-## Read the documentation
+## Documentation
 
-- [Getting started](docs/src/index.md)
-- [HYPR and the spacecraft method](docs/src/method.md)
-- [Search API and ownership](docs/src/api.md)
-- [SpaceAGORA integration](docs/src/integration.md)
-- [Validation and limitations](docs/src/validation.md)
-- [Migration and compatibility](docs/src/migration.md)
+| Question | Guide |
+| --- | --- |
+| What does HYPR do? | [Overview and first steps](docs/src/index.md) |
+| How do I plan an arm motion? | [Robot-arm walkthrough](docs/src/robot_arm.md) |
+| How does it connect to SpaceAGORA? | [Installation and integration](docs/src/integration.md) |
+| Which versions go together? | [Compatibility and source records](docs/src/integration.md#compatibility-and-source-records) |
+| How do I supply a search objective? | [Search API](docs/src/api.md) |
+| What has been validated? | [Validation and limitations](docs/src/validation.md) |
+| How does the software relate to the paper? | [Method and citation](docs/src/method.md) |
+| How do I update an older installation? | [Migration](docs/src/migration.md) |
 
-Build the standalone site with:
+Build the documentation locally with:
 
 ```sh
 julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
 julia --project=docs docs/make.jl
 ```
 
-For the method, cite Gorisek-Gazze and Falcone, “HyPR: Safety- and Fuel-Aware
-Motion Planning and Replanning for Autonomous SmallSat Servicing,” accepted to
-iSpaRo 2026. The [method and citation page](docs/src/method.md) gives the full
-reference and distinguishes the paper's results from current software validation.
-Also record the exact software revision used in an experiment. See
-[PROVENANCE.md](PROVENANCE.md) for source attribution and the retained MIT license.
+Run the standalone tests with `julia --project=. -e 'using Pkg; Pkg.test()'`.
+The [validation guide](docs/src/validation.md) describes the separate adapter and
+arithmetic checks and the limits of their evidence.
+
+## Citation and credits
+
+For the method, cite Jakob Gorisek-Gazze and Giusy Falcone, “HyPR: Safety- and
+Fuel-Aware Motion Planning and Replanning for Autonomous SmallSat Servicing,”
+accepted to iSpaRo 2026. The [method page](docs/src/method.md#citation) provides
+the reference and BibTeX. Record the exact HYPR and SpaceAGORA revisions alongside
+experimental results. [PROVENANCE.md](PROVENANCE.md) describes the extraction from
+Space-FALCON Lab's SpaceAGORA and the retained [MIT license](LICENSE).
