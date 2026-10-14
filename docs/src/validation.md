@@ -91,9 +91,9 @@ passing results alone are not release acceptance.
 `test/custom_objective.jl` checks callback ranking, the straight-path branch,
 all refinement operations, result metadata, malformed returns and default-mode
 regressions against HYPR 0.1.0 at `6b2af3b4129907d76f6cdc873267a57445c1334b`.
-Eight fixed legacy/manuscript cases retain path, cost, components, cost history,
+Historical fixtures retain eight legacy/manuscript cases with path, cost, components, cost history,
 refinement status and exact RNG consumption. Floating results allow 1e-12
-absolute/relative tolerance across numerical-library platforms.
+absolute/relative tolerance across numerical-library platforms. The final iSpaRo candidate retains the four legacy cases as compatibility gates. Manuscript mode now checks seeded determinism, endpoint preservation and objective consistency; its earlier fixtures remain historical and are not relabeled as passing unchanged.
 
 `test/jakob_comparison.jl` runs the unmodified CPU comparison consumer from
 SpaceAGORA commit `fa2e4a411c16c0587230b2020881a36065887b07`; its complete source
@@ -101,3 +101,25 @@ inventory is hash-checked. Clear, bounded zero/one-waypoint cases exercise both
 original and retimed-fuel PSO routes and their actual terminal coupled tracker.
 The 0.00625 m/s² acceleration limit follows the existing comparison configuration.
 This verifies compatibility, not the paper's complete campaign or RL training.
+
+
+## Final iSpaRo manuscript reconstruction candidate
+
+The candidate changes the SpaceAGORA RPO extension's `:manuscript` behavior to
+use the final paper's absolute coefficient endpoints `(0.455,1.05,1.75)` and
+first-half cubic schedule, ten-iteration culling, whole-particle stagnation
+trials, bounded re-exploration and evaluated final particle updates. Zero
+reference velocity is imposed at departure and arrival in the ordinary retimer.
+Legacy mode and the standalone generic swarm kernel retain their behavior.
+
+`test/final_isparo_swarm.jl` exercises coefficient endpoints and culling boundaries
+in the optional integration environment. Full numerical reconstruction and the
+physical hold/replanning tests live with the SpaceAGORA companion candidate.
+Whole-particle uniform trial distribution and particle growth factor 1.5 are
+explicit reconstruction choices because the final paper does not specify them.
+They must not be presented as recovered original run settings. These changes
+are intentionally different from historical manuscript-mode golden results;
+those historical fixtures remain evidence of the prior implementation.
+
+Passing local tests does not establish independent review, publication, hosted
+validation or reproduction of the 500-case and 800-case paper campaigns.

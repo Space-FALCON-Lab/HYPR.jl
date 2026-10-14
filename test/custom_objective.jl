@@ -12,8 +12,9 @@ compatible(a::AbstractArray,b::AbstractArray)=size(a)==size(b) && all(compatible
 compatible(a::Tuple,b::Tuple)=length(a)==length(b) && all(compatible(x,y) for (x,y) in zip(a,b))
 compatible(a::NamedTuple,b::NamedTuple)=keys(a)==keys(b) && compatible(values(a),values(b))
 summary(a,rng)=(a.path,a.cost,a.components,a.cost_history,a.refinement_improved,rand(rng))
-@testset "Unchanged 0.1.0 legacy/manuscript defaults" begin
- for mode in (:legacy,:manuscript), refine in (false,true), seed in (1,17)
+@testset "Unchanged 0.1.0 legacy defaults" begin
+ # Historical manuscript fixtures are retained; the final iSpaRo candidate changes that mode.
+ for mode in (:legacy,), refine in (false,true), seed in (1,17)
   cfg=SpaceAGORA.RPOPSOConfig(hypr_mode=mode,n_waypoints=2,n_particles=4,n_iters=2,adaptive_enable=false,rrt_warmstart_enable=false,sample_ds_m=.2,iteration_runtime_limit_s=Inf,refinement_enable=refine,refinement_rounds=1)
   for kwargs in ((;),(objective_evaluator=nothing,))
    rng=MersenneTwister(seed)
@@ -22,6 +23,21 @@ summary(a,rng)=(a.path,a.cost,a.components,a.cost_history,a.refinement_improved,
    @test compatible(actual,expected)
    @test actual[end] == expected[end] # RNG consumption must be exact.
   end
+ end
+end
+@testset "Final iSpaRo manuscript determinism and objective consistency" begin
+ for refine in (false,true), seed in (1,17)
+  cfg=SpaceAGORA.RPOPSOConfig(hypr_mode=:manuscript,n_waypoints=2,n_particles=4,n_iters=2,
+   adaptive_enable=false,rrt_warmstart_enable=false,sample_ds_m=.2,iteration_runtime_limit_s=Inf,
+   refinement_enable=refine,refinement_rounds=1)
+  rng1=MersenneTwister(seed);rng2=MersenneTwister(seed)
+  a=G.rpo_pso_plan_path(start,goal,geo,cfg;rng=rng1)
+  b=G.rpo_pso_plan_path(start,goal,geo,cfg;rng=rng2,objective_evaluator=nothing)
+  @test compatible(summary(a,rng1),summary(b,rng2))
+  @test a.path[:,1] == start && a.path[:,end] == goal
+  @test a.cost == a.components.total
+  @test isapprox(a.cost,G.rpo_normalized_path_cost_components(a.path,geo,a.config;safe_distance_m=0.).total;rtol=1e-12,atol=1e-12)
+  @test all(diff(a.cost_history) .<= 1e-12)
  end
 end
 @testset "Custom RPO component contract" begin
