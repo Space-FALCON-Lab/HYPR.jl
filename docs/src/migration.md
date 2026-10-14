@@ -18,10 +18,13 @@ compatibility beyond the retained comparison is claimed.
 
 ## Supported migration
 
-1. Use the SpaceAGORA 0.2 service-provider revision identified by the integration
-   release or PR. HYPR 0.1 does not support SpaceAGORA or shim 0.1.
-2. Run SpaceAGORA's `scripts/setup_hypr.jl` in a separate project. It installs the
-   immutable HYPR revision declared by that SpaceAGORA checkout.
+1. Use the SpaceAGORA source pair recorded in the
+   [integration guide](integration.md#Compatibility-and-source-records). HYPR 0.1
+   does not support SpaceAGORA or shim 0.1.
+2. From that SpaceAGORA clone, run
+   `julia scripts/optional_packages.jl setup hypr /path/to/hypr-env`. It verifies
+   the optional source at `packages/robotics/HYPR.jl` and prepares a separate
+   project. The older `scripts/setup_hypr.jl` route remains supported.
 3. Load `SpaceAGORA` and the `SpaceAGORAHYPR` compatibility shim in that project.
    Existing configured entry points remain accessible through their original
    SpaceAGORA names. Applications using only the numerical search core load

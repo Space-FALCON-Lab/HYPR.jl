@@ -11,6 +11,7 @@ owner in the core and compatibility forwarders in the extension. The robot-arm
 iteration loop now calls the standalone core search; RPO calls its core movement
 kernel. The source comparison and retained seeded results identify these changes.
 
-This package adds no authorship claims or unverified publication links.
-A formal manuscript citation should be added only from an approved bibliographic
-record, rather than inferred from filenames or an unverified summary.
+The [method and citation guide](docs/src/method.md#citation) records the confirmed
+HyPR manuscript by Jakob Gorisek-Gazze and Giusy Falcone. Cite that paper for the
+method and record the exact software revisions for an experiment. The citation
+does not imply that this package reproduces the complete paper campaign.
