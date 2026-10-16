@@ -21,6 +21,11 @@ function rpo_reference_from_path(path_rtn, geometry, cfg::RPOPSOConfig; safe_dis
         end
         v_ref[:, end] .= v_ref[:, end - 1]
     end
+    if cfg.hypr_mode === :manuscript && n > 0
+        # Section III.B specifies departure and arrival at rest.
+        v_ref[:, 1] .= 0.0
+        v_ref[:, end] .= 0.0
+    end
     t_ref = collect(0.0:cfg.retime_dt_s:(cfg.retime_dt_s * (n - 1)))
     return t_ref, r_ref, v_ref
 end

@@ -34,3 +34,7 @@ end
     @test isfinite(arm.cost)
     @test all(isfinite,arm.plan.q_ref)
 end
+
+if order == "core-first"
+    include(joinpath(@__DIR__, "final_isparo_swarm.jl"))
+end

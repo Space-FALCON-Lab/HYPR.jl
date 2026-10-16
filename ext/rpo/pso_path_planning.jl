@@ -1,5 +1,12 @@
 """Return the PSO inertia and acceleration weights for the current iteration."""
 function rpo_pso_iteration_weights(cfg::RPOPSOConfig, iter::Int)
+    if cfg.hypr_mode === :manuscript && cfg.schedule_enable && cfg.n_iters > 1
+        # Final iSpaRo Table I: absolute endpoints, independent of initial eta.
+        tau = clamp((iter - 1) / (0.5 * (cfg.n_iters - 1)), 0.0, 1.0)
+        s = tau^2 * (3.0 - 2.0 * tau)
+        return (w_inertia=cfg.w_inertia + s * (0.455 - cfg.w_inertia),
+            c1=cfg.c1 + s * (1.05 - cfg.c1), c2=cfg.c2 + s * (1.75 - cfg.c2))
+    end
     return hypr_iteration_weights(
         cfg.schedule_enable,
         cfg.n_iters,
@@ -63,6 +70,8 @@ function rpo_pso_cull_swarm!(
     if !cfg.cull_enable || iter < cfg.cull_start_iter || cfg.cull_fraction_max <= 0.0 || !isfinite(minimum(pbest_cost))
         return 0
     end
+    # Sec. III.D: manuscript culling is periodic, not every subsequent iteration.
+    cfg.hypr_mode === :manuscript && iter % 10 != 0 && return 0
     n_replace = min(cfg.n_particles - 1, floor(Int, cfg.cull_fraction_max * cfg.n_particles))
     n_replace <= 0 && return 0
     worst = sortperm(pbest_cost; rev=true)[1:n_replace]
@@ -313,6 +322,7 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
     iteration_timeout_iter = 0
     iteration_timeout_phase = :none
     iteration_timeout_events = NamedTuple[]
+    reexploration_events = NamedTuple[]
     # A particle owns its random stream, independently of task scheduling and
     # Julia thread count. Wall-clock iteration limits still permit early exits.
     particle_rngs = [MersenneTwister(rand(rng, UInt)) for _ in 1:cfg.n_particles]
@@ -526,13 +536,23 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
             end
             accepted = false
             n_trials = 0
-            for wp_idx in randperm(rng, current_n_waypoints)
+            trials = cfg.hypr_mode === :manuscript ? (1:1) : randperm(rng, current_n_waypoints)
+            for wp_idx in trials
                 for d in 1:dim
                     candidate[d] = positions[d, pidx]
                 end
                 block = (3 * (wp_idx - 1) + 1):(3 * wp_idx)
-                for d in block
-                    candidate[d] = gbest[d]
+                if cfg.hypr_mode === :manuscript
+                    # Entire-particle trial in the admissible region. Uniform sampling
+                    # is the explicit reconstruction choice where the paper is silent.
+                    block = 1:dim
+                    for d in block
+                        candidate[d] = lo_rep[d] + rand(rng) * (hi_rep[d] - lo_rep[d])
+                    end
+                else
+                    for d in block
+                        candidate[d] = gbest[d]
+                    end
                 end
                 comps = evaluate_position(candidate; cost_cutoff=curr_cost[pidx])
                 improves_cost = comps.total + 1.0e-9 < curr_cost[pidx]
@@ -586,6 +606,7 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
         iter_start_ns = time_ns()
         if cfg.reexplore_enable &&
             iter >= max(1, cfg.reexplore_trigger_iter) &&
+            (cfg.hypr_mode !== :manuscript || iter % max(1, cfg.reexplore_trigger_iter) == 0) &&
             gbest_components !== nothing &&
             gbest_components.violation_count > 0
 
@@ -596,7 +617,19 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
                 current_search_margin * margin_scale,
                 current_search_margin + max(cfg.sample_ds_m, effective_safe_distance, 1.0e-6),
             )
-            if new_n_waypoints > current_n_waypoints || new_search_margin > current_search_margin
+            old_particles = cfg.n_particles
+            if cfg.hypr_mode === :manuscript
+                # Reconstruct the stated retuning within Table I's bounds. The
+                # manuscript search box stays fixed; enlargement remains legacy-only.
+                new_n_waypoints = min(new_n_waypoints, cfg.adaptive_n_waypoints_max)
+                new_search_margin = current_search_margin
+                new_particles = min(cfg.adaptive_n_particles_max, max(old_particles+1, ceil(Int, 1.5*old_particles)))
+                cfg = rpo_pso_config(cfg; n_particles=new_particles)
+                append!(particle_rngs, [MersenneTwister(rand(rng, UInt)) for _ in old_particles+1:new_particles])
+            end
+            if new_n_waypoints > current_n_waypoints || new_search_margin > current_search_margin || cfg.n_particles > old_particles
+                push!(reexploration_events,(iteration=iter,particles_before=old_particles,particles_after=cfg.n_particles,
+                    waypoints_before=current_n_waypoints,waypoints_after=new_n_waypoints))
                 reset_swarm!(new_n_waypoints, new_search_margin; seed_points=seed_path, seed_curve_type=cfg.curve_type)
                 curr_cost, curr_obs, eval_timed_out = evaluate_swarm!(iter_start_ns=iter_start_ns)
                 early_stop_best_cost = Inf
@@ -642,6 +675,18 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
             break
         end
 
+        if cfg.hypr_mode === :manuscript
+            # Evaluate every scheduled update, including the final coefficients.
+            weights = rpo_pso_iteration_weights(cfg, iter)
+            HYPR._advance_particles!(positions, velocities, pbest, gbest,
+                lo_rep, hi_rep, weights, particle_rngs)
+            curr_cost, curr_obs, eval_timed_out = evaluate_swarm!(iter_start_ns=iter_start_ns)
+            if eval_timed_out
+                record_iteration!(iter)
+                record_iteration_timeout!(iter, :swarm_evaluate, iter_start_ns)
+                break
+            end
+        end
         record_iteration!(iter)
 
         if rpo_pso_material_improvement(gbest_cost, early_stop_best_cost, cfg)
@@ -663,6 +708,7 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
             break
         end
 
+        cfg.hypr_mode === :manuscript && continue
         weights = rpo_pso_iteration_weights(cfg, iter)
         HYPR._advance_particles!(positions, velocities, pbest, gbest,
             lo_rep, hi_rep, weights, particle_rngs)
@@ -696,6 +742,7 @@ function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig
         iteration_timeout_iter=iteration_timeout_iter,
         iteration_timeout_phase=iteration_timeout_phase,
         iteration_timeout_events=iteration_timeout_events,
+        reexploration_events=reexploration_events,
         warmstart=warmstart,
         cost_history=cost_history,
         pso_path=path,

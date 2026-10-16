@@ -55,8 +55,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
-          # Reviewed service-provider commit; publish it before enabling release CI.
-          ref: 8a979873ad0ed17045a9080347b13f944c176079
+          # Paired final-iSpaRo delivery provider; publish this commit before this branch.
+          ref: e98605617e5b04e7f7163095f527c010b9a5398b
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
