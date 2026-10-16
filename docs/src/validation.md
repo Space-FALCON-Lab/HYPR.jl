@@ -134,8 +134,10 @@ Table III. Its appearance can leave insufficient stopping margin; the failed
 outcome remains counted even if a replacement route reaches the goal. Consult
 the guide for the model assumptions and unrecovered original experiment inputs.
 
-The delivery CI provider is SpaceAGORA commit
-`e98605617e5b04e7f7163095f527c010b9a5398b`. Its companion pins HYPR runtime
+The delivery CI provider was SpaceAGORA commit
+`e98605617e5b04e7f7163095f527c010b9a5398b`; from HYPR 0.2.0 the integration CI
+pins the SpaceAGORA revision that provides `HYPRServices` contract 2.0.0. The
+delivery provider's companion pins HYPR runtime
 `80a4f53a2fb893989c0ad54093b442a90f88aa7e`; the later HYPR delivery changes only
 this validation guide and the CI provider pin. Publish that runtime, then the
 SpaceAGORA provider, then this CI configuration so all pinned commits are
