@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Breaking: the SpaceAGORA extension's planners require an explicit `rng` (an
+  `AbstractRNG`) and no longer draw from the global stream when it is omitted:
+  `rpo_pso_plan_path`, the HYPR-configured `rpo_rrt_connect_plan_path`,
+  `rpo_rrt_star_plan_path` and `rpo_rrt_connect_bezier_plan_path`, and
+  `plan_robot_arm_motion_hypr`. This pairs with SpaceAGORA's required random
+  streams in its GNC planning kernels; the release version is set with the
+  provider contract update.
+
 ## 0.1.1
 
 - Restore the optional RPO `objective_evaluator` from Jakob's August 26 source

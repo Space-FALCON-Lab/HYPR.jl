@@ -237,7 +237,7 @@ end
 end
 
 """Run the RPO HYPR PSO planner and return the best path, cost, and diagnostics."""
-function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig; safe_distance_m=nothing, rng=Random.default_rng(), iteration_callback=nothing, objective_evaluator=nothing)
+function rpo_pso_plan_path(start_rtn, goal_rtn, geometry, base_cfg::RPOPSOConfig; safe_distance_m=nothing, rng::Random.AbstractRNG, iteration_callback=nothing, objective_evaluator=nothing)
     adaptive_safe_distance = safe_distance_m === nothing ||
         (Float64(safe_distance_m) == 0.0 && base_cfg.safe_distance_m > 0.0) ?
         base_cfg.safe_distance_m :

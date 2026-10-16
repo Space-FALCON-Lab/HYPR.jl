@@ -179,7 +179,7 @@ function plan_robot_arm_motion_hypr(
     planner_config::RobotArmPlannerConfig=RobotArmPlannerConfig(),
     hypr_config::RobotArmHYPRConfig=RobotArmHYPRConfig(),
     obstacles::AbstractVector{RobotArmSphereObstacle}=RobotArmSphereObstacle[],
-    rng=Random.default_rng(),
+    rng::Random.AbstractRNG,
 )
     cfg = _validate_robot_arm_hypr_config(hypr_config)
     q0 = Float64.(collect(q_start))

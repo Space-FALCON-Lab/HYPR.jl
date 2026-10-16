@@ -14,7 +14,7 @@ end
 function rpo_rrt_connect_plan_path(start_rtn, goal_rtn, geometry, cfg::RPOPSOConfig;
     safe_distance_m::Real=0.0,
     settings::RPORRTConnectSettings=RPORRTConnectSettings(),
-    max_runtime_s::Real=Inf, rng=Random.default_rng(), post_refine::Bool=true)
+    max_runtime_s::Real=Inf, rng::Random.AbstractRNG, post_refine::Bool=true)
     local_cfg = rpo_pso_config(cfg; curve_type=:polyline)
     start = SVector{3, Float64}(start_rtn)
     goal = SVector{3, Float64}(goal_rtn)
@@ -32,7 +32,7 @@ end
 function rpo_rrt_star_plan_path(start_rtn, goal_rtn, geometry, cfg::RPOPSOConfig;
     safe_distance_m::Real=0.0,
     settings::RPORRTStarSettings=RPORRTStarSettings(),
-    max_runtime_s::Real=Inf, rng=Random.default_rng())
+    max_runtime_s::Real=Inf, rng::Random.AbstractRNG)
     local_cfg = rpo_pso_config(cfg; curve_type=:polyline)
     start = SVector{3, Float64}(start_rtn)
     goal = SVector{3, Float64}(goal_rtn)
@@ -55,7 +55,7 @@ function rpo_rrt_connect_bezier_plan_path(
     safe_distance_m::Real=0.0,
     settings::RPORRTConnectSettings=RPORRTConnectSettings(),
     max_runtime_s::Real=Inf,
-    rng=Random.default_rng(),
+    rng::Random.AbstractRNG,
 )
     base_plan = rpo_rrt_connect_plan_path(
         start_rtn,
