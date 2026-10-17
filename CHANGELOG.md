@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0
+## 0.2.0 (2026-10-17)
 
 - Breaking: the SpaceAGORA extension's planners require an explicit `rng` (an
   `AbstractRNG`) and no longer draw from the global stream when it is omitted:

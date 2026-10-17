@@ -16,8 +16,8 @@ JULIA_LOAD_PATH='@:@stdlib' julia --startup-file=no --project=/path/to/hypr-env 
   examples/robot_arm_plan.jl
 ```
 
-Use a current HYPR checkout for this example file; it was added after the v0.1.1
-source archive. The installed runtime remains the version selected by SpaceAGORA.
+The example file is part of the v0.2.0 source; the v0.1.1 archive does not contain
+it. The installed runtime remains the version selected by SpaceAGORA.
 The [source records](integration.md#Compatibility-and-source-records) identify the
 pair used to check this walkthrough.
 
@@ -82,5 +82,5 @@ error, contact forces or base disturbance during execution.
 The preferred `RobotArm*` names describe SpaceAGORA's robot model. Older `Cloth*`
 names remain in adapter contracts 1.0.0 and 2.0.0 for compatibility with the same compliant
 multibody services. The name change does not add MuJoCo contacts. See the
-[SpaceAGORA public API policy](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/388b8801b3e912c264b04a462b019acbaf1c0d1a/docs/src/public_api_policy.md#compliant-multibody-and-robot-arm-names)
+[SpaceAGORA public API policy](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/d5fbe425a18b7fa7e7d2e8d9d2c4b83d7cbbcffd/docs/src/public_api_policy.md#compliant-multibody-and-robot-arm-names)
 and [validation guide](validation.md) before extending this example.
