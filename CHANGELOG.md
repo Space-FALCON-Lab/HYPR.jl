@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0
+
+- Breaking: the SpaceAGORA extension's planners require an explicit `rng` (an
+  `AbstractRNG`) and no longer draw from the global stream when it is omitted:
+  `rpo_pso_plan_path`, the HYPR-configured `rpo_rrt_connect_plan_path`,
+  `rpo_rrt_star_plan_path` and `rpo_rrt_connect_bezier_plan_path`, and
+  `plan_robot_arm_motion_hypr`. This pairs with SpaceAGORA's required random
+  streams in its GNC planning kernels.
+- Breaking: the extension requires SpaceAGORA `HYPRServices` contract 2.0.0, which
+  accepts HYPR 0.2.0 only. A SpaceAGORA revision providing contract 1.0.0 is
+  refused before the extension defines its methods.
+- SpaceAGORA compatibility widens to `0.2, 0.3`: contract 2.0.0 is planned for
+  SpaceAGORA 0.3.0, and the paired source revision still declares 0.2.0.
+
 ## 0.1.1
 
 - Restore the optional RPO `objective_evaluator` from Jakob's August 26 source

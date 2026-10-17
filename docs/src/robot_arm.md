@@ -80,7 +80,7 @@ claim, and reaching the endpoint in the reference says nothing yet about trackin
 error, contact forces or base disturbance during execution.
 
 The preferred `RobotArm*` names describe SpaceAGORA's robot model. Older `Cloth*`
-names remain in adapter contract 1.0.0 for compatibility with the same compliant
+names remain in adapter contracts 1.0.0 and 2.0.0 for compatibility with the same compliant
 multibody services. The name change does not add MuJoCo contacts. See the
 [SpaceAGORA public API policy](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/388b8801b3e912c264b04a462b019acbaf1c0d1a/docs/src/public_api_policy.md#compliant-multibody-and-robot-arm-names)
 and [validation guide](validation.md) before extending this example.

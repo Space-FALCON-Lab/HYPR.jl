@@ -71,7 +71,7 @@ end
   @test result.components.marker === :custom
  end
  cfg=SpaceAGORA.RPOPSOConfig(n_waypoints=0,adaptive_enable=false,rrt_warmstart_enable=false)
- result=G.rpo_pso_plan_path(start,goal,geo,cfg;objective_evaluator=objective)
+ result=G.rpo_pso_plan_path(start,goal,geo,cfg;rng=MersenneTwister(1),objective_evaluator=objective)
  @test result.cost == -1.0
  @test result.components.marker === :custom
  @test result.cost_history == [-1.0]

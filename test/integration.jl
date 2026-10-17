@@ -33,6 +33,14 @@ end
         hypr_config=S.RobotArmHYPRConfig(n_particles=4,n_iters=2,n_waypoints=1,n_samples=20),rng=MersenneTwister(2))
     @test isfinite(arm.cost)
     @test all(isfinite,arm.plan.q_ref)
+    # HYPRServices 2.0.0: every planner HYPR supplies requires its random stream.
+    @test SpaceAGORA.HYPRServices.CONTRACT_VERSION == v"2.0.0"
+    for planner in (G.rpo_pso_plan_path,G.rpo_rrt_connect_plan_path,G.rpo_rrt_star_plan_path,G.rpo_rrt_connect_bezier_plan_path)
+        @test_throws UndefKeywordError planner([1.,0.,0.],[3.,1.,0.],geo,cfg)
+    end
+    @test_throws UndefKeywordError S.plan_robot_arm_motion_hypr(model,base,q0,target;
+        planner_config=S.RobotArmPlannerConfig(dt_s=.1,duration_s=.5),
+        hypr_config=S.RobotArmHYPRConfig(n_particles=4,n_iters=2,n_waypoints=1,n_samples=20))
 end
 
 if order == "core-first"

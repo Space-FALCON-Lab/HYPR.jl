@@ -5,8 +5,8 @@ import HYPR
 const PROVIDER_VERSION = Base.pkgversion(HYPR)
 const INITIALIZED = Ref(false)
 initialized() = INITIALIZED[]
-isdefined(SpaceAGORA, :HYPRServices) || error("HYPR requires SpaceAGORA HYPRServices contract 1.0.0. Install the supported version pair.")
-SpaceAGORA.HYPRServices.check_provider(:HYPR, PROVIDER_VERSION, v"1.0.0")
+isdefined(SpaceAGORA, :HYPRServices) || error("HYPR requires SpaceAGORA HYPRServices contract 2.0.0. Install the supported version pair.")
+SpaceAGORA.HYPRServices.check_provider(:HYPR, PROVIDER_VERSION, v"2.0.0")
 module SwarmPolicy
 import SpaceAGORA.HYPRServices.SwarmPolicy: hypr_iteration_weights, hypr_material_improvement, hypr_protected_particle_mask
 import HYPR
@@ -184,7 +184,7 @@ include("rpo_planner_execution.jl")
 end
 function __init__()
     INITIALIZED[] = false
-    SpaceAGORA.HYPRServices.activate!(:HYPR, PROVIDER_VERSION, v"1.0.0")
+    SpaceAGORA.HYPRServices.activate!(:HYPR, PROVIDER_VERSION, v"2.0.0")
     INITIALIZED[] = true
 end
 end

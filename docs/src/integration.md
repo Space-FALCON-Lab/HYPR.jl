@@ -35,9 +35,10 @@ insufficient because Julia does not apply a dependency's `[sources]` transitivel
 
 ## Compatibility and source records
 
-The following records identify the source pair used by this guide. Save the
-resolved project and manifest with a run; the version number alone does not
-identify a SpaceAGORA research revision.
+The following records identify the source pair used by this guide, HYPR 0.1.1
+under contract 1.0.0. HYPR 0.2.0 requires contract 2.0.0 (below), so it pairs
+with a later SpaceAGORA revision. Save the resolved project and manifest with a
+run; the version number alone does not identify a SpaceAGORA research revision.
 
 | Component | Version or revision | Meaning |
 | --- | --- | --- |
@@ -60,13 +61,15 @@ retained evidence and release requirements.
 
 `using HYPR` alone neither installs nor loads SpaceAGORA. When both packages are
 loaded, `HYPRSpaceAGORAExt` provides the existing configured RPO and robot-arm
-methods through `SpaceAGORA.HYPRServices` contract 1.0.0. It imports explicit
+methods through `SpaceAGORA.HYPRServices` contract 2.0.0. It imports explicit
 contract bindings, including historically underscored helper names, instead of
 whole internal simulator modules. Public configuration/result identities remain
 owned by SpaceAGORA.
 
-HYPR 0.1.1 requires a SpaceAGORA 0.2.0 revision explicitly accepting provider
-0.1.1 under service contract 1.0.0. That consumer also accepts HYPR 0.1.0. Legacy
+HYPR 0.2.0 requires a SpaceAGORA revision providing service contract 2.0.0,
+which accepts provider 0.2.0 only. Contract 2.0.0 requires every planner HYPR
+supplies to take an explicit `rng`; HYPR 0.1.0 and 0.1.1, whose planners defaulted
+to the global stream, pair only with contract 1.0.0. Legacy
 `using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
 excluded by compatibility metadata and refused by the runtime activation check.
 Contract and provider versions are checked before source method definitions and
