@@ -55,8 +55,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
-          # Paired HYPRServices 2.0.0 provider; publish this commit before this branch.
-          ref: aa2aa3efe2be0286446a160948e8aa4783c2a840
+          # SpaceAGORA's merge of its HYPRServices 2.0.0 pull request (#369).
+          ref: d5fbe425a18b7fa7e7d2e8d9d2c4b83d7cbbcffd
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
