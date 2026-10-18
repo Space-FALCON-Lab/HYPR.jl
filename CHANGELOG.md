@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
+- SpaceAGORA compatibility moves to `0.3, 0.4`. SpaceAGORA 0.3.0 was the first
+  release with `HYPRServices` contract 2.0.0, and 0.4.0 keeps that contract. No
+  code changes; HYPR uses none of the SpaceAGORA names deprecated for removal in
+  0.5.0.
+- SpaceAGORA accepts HYPR 0.3.0 from the revision this release's integration CI
+  pins.
+
 ## 0.2.0 (2026-10-17)
 
 - Breaking: the SpaceAGORA extension's planners require an explicit `rng` (an
