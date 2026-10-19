@@ -1,13 +1,14 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.3.0 (RELEASE_DATE)
 
 - SpaceAGORA compatibility moves to `0.3, 0.4`. SpaceAGORA 0.3.0 was the first
   release with `HYPRServices` contract 2.0.0, and 0.4.0 keeps that contract. No
   code changes; HYPR uses none of the SpaceAGORA names deprecated for removal in
   0.5.0.
-- SpaceAGORA accepts HYPR 0.3.0 from the revision this release's integration CI
-  pins.
+- SpaceAGORA accepts HYPR 0.3.0, and only it, from the merge of its companion-pin
+  pull request (`1618216e2`), which this release's integration CI pins. SpaceAGORA
+  0.4.0 is the first release that pairs with it.
 
 ## 0.2.0 (2026-10-17)
 
