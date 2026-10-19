@@ -10,7 +10,7 @@ without loading a simulator.
 
 Use the standalone example to learn the search API. Use the robot-arm walkthrough
 to connect a physical model and target to a timed reference. SpaceAGORA's
-[spacecraft guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/CORE_V040_SHA/docs/src/user/hypr_planning.md)
+[spacecraft guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/c4bd7b6aba09eadf27a2851094f66f9d20f71000/docs/src/user/hypr_planning.md)
 continues from route planning to controller tracking.
 
 | Goal | Start here |

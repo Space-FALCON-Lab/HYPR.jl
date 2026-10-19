@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (RELEASE_DATE)
+## 0.3.0 (2026-10-19)
 
 - SpaceAGORA compatibility moves to `0.3, 0.4`. SpaceAGORA 0.3.0 was the first
   release with `HYPRServices` contract 2.0.0, and 0.4.0 keeps that contract. No
