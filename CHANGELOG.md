@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
+- SpaceAGORA compatibility moves to `0.4, 0.5`. SpaceAGORA 0.5.0 removes the
+  names deprecated in 0.3.0; HYPR uses none of them, so no code changes.
+- SpaceAGORA accepts HYPR 0.4.0 from the revision this release's integration CI
+  pins.
+
 ## 0.3.0 (unreleased)
 
 - SpaceAGORA compatibility moves to `0.3, 0.4`. SpaceAGORA 0.3.0 was the first
