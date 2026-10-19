@@ -12,11 +12,11 @@ complete static and dynamic campaigns remains separate work.
 
 ## Install
 
-HYPR **0.2.0** is a prerelease for **Julia 1.12** and is not registered in General.
+HYPR **0.3.0** is a prerelease for **Julia 1.12** and is not registered in General.
 For the standalone numerical search, install the versioned source:
 
 ```sh
-julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.2.0")'
+julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.3.0")'
 ```
 
 For spacecraft or robot-arm planning, use the
@@ -38,7 +38,7 @@ It prints the best position and cost for a dimensionless quadratic. For a
 physical planning example, follow the [robot-arm walkthrough](docs/src/robot_arm.md):
 define an arm and target, create a timed joint reference, and inspect its endpoint
 error. For spacecraft rendezvous, start with SpaceAGORA's
-[HYPR planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/d5fbe425a18b7fa7e7d2e8d9d2c4b83d7cbbcffd/docs/src/user/hypr_planning.md).
+[HYPR planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/c4bd7b6aba09eadf27a2851094f66f9d20f71000/docs/src/user/hypr_planning.md).
 
 ## Documentation
 
