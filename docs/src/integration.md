@@ -47,10 +47,11 @@ number alone does not identify a SpaceAGORA research revision.
 | SpaceAGORAHYPR | 0.2.0, in the same SpaceAGORA checkout | Compatibility loader for the historical package name |
 | HYPRServices | 2.0.0 | Adapter contract; accepts provider HYPR 0.4.0 only |
 
-HYPR's integration CI pins SpaceAGORA
-[`f7f3c0bd4`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/f7f3c0bd46c6faccb58a0d1dcb29213dc48c54bd), the
-merge of the pull request that admitted HYPR 0.4.0. The v0.5.0 release contains it
-and pins the same HYPR runtime. That configured CI pair and the bounded walkthrough
+HYPR's integration CI pins that release commit,
+[`41cd1f2ef`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/41cd1f2ef7bcd4ef51f556487911e797ca411867), which
+contains [`f7f3c0bd4`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/f7f3c0bd46c6faccb58a0d1dcb29213dc48c54bd),
+the merge of the pull request that admitted HYPR 0.4.0.
+That configured CI pair and the bounded walkthrough
 have different scopes; neither establishes compatibility with every source revision
 carrying version 0.5.0, or reproduction of the paper. See [Validation and limits](@ref)
 for the retained evidence and release requirements. The earlier pairs are recorded

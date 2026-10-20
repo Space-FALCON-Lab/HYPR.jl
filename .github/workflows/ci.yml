@@ -55,8 +55,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
-          # SpaceAGORA's merge of its companion-pin pull request for 0.5.0 (#431).
-          ref: f7f3c0bd46c6faccb58a0d1dcb29213dc48c54bd
+          # The SpaceAGORA v0.5.0 release.
+          ref: 41cd1f2ef7bcd4ef51f556487911e797ca411867
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
