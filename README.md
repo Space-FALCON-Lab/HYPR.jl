@@ -38,7 +38,7 @@ It prints the best position and cost for a dimensionless quadratic. For a
 physical planning example, follow the [robot-arm walkthrough](docs/src/robot_arm.md):
 define an arm and target, create a timed joint reference, and inspect its endpoint
 error. For spacecraft rendezvous, start with SpaceAGORA's
-[HYPR planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/CORE_V050_SHA/docs/src/user/hypr_planning.md).
+[HYPR planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/41cd1f2ef7bcd4ef51f556487911e797ca411867/docs/src/user/hypr_planning.md).
 
 ## Documentation
 
