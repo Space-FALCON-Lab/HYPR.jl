@@ -10,7 +10,7 @@ without loading a simulator.
 
 Use the standalone example to learn the search API. Use the robot-arm walkthrough
 to connect a physical model and target to a timed reference. SpaceAGORA's
-[spacecraft guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/c4bd7b6aba09eadf27a2851094f66f9d20f71000/docs/src/user/hypr_planning.md)
+[spacecraft guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/41cd1f2ef7bcd4ef51f556487911e797ca411867/docs/src/user/hypr_planning.md)
 continues from route planning to controller tracking.
 
 | Goal | Start here |
@@ -26,11 +26,11 @@ continues from route planning to controller tracking.
 
 ## Installation and first search
 
-HYPR 0.3.0 is a prerelease for Julia 1.12. It is not registered in General.
+HYPR 0.4.0 is a prerelease for Julia 1.12. It is not registered in General.
 To use the standalone library in your own project:
 
 ```sh
-julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.3.0")'
+julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.4.0")'
 ```
 
 Launch Julia with `--project=hypr-demo` and load `HYPR`. To run the repository's

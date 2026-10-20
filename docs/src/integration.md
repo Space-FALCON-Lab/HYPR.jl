@@ -17,7 +17,7 @@ JULIA_LOAD_PATH='@:@stdlib' julia --startup-file=no --project=/path/to/hypr-env 
 The first command prepares a separate environment and uses the verified optional
 checkout at `packages/robotics/HYPR.jl`. The second runs SpaceAGORA's short RPO
 example through planning and controller tracking. The
-[SpaceAGORA installation guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/c4bd7b6aba09eadf27a2851094f66f9d20f71000/docs/src/user/installation_environment.md#optional-package-commands)
+[SpaceAGORA installation guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/41cd1f2ef7bcd4ef51f556487911e797ca411867/docs/src/user/installation_environment.md#optional-package-commands)
 explains checkout verification and recovery when the optional source is missing
 or modified. Use a Git clone for this route; an archive does not contain submodule
 contents. The setup command initializes the requested optional checkout.
@@ -35,28 +35,30 @@ insufficient because Julia does not apply a dependency's `[sources]` transitivel
 
 ## Compatibility and source records
 
-The following records identify the source pair qualified for HYPR 0.3.0 under
+The following records identify the source pair qualified for HYPR 0.4.0 under
 contract 2.0.0. Save the resolved project and manifest with a run; the version
 number alone does not identify a SpaceAGORA research revision.
 
 | Component | Version or revision | Meaning |
 | --- | --- | --- |
 | Julia | 1.12 | Package compatibility requirement |
-| SpaceAGORA | 0.4.0 at [`c4bd7b6ab`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/c4bd7b6aba09eadf27a2851094f66f9d20f71000), tag `v0.4.0` | Core release that provides `HYPRServices` 2.0.0 and pins this HYPR runtime |
-| HYPR | 0.3.0 at [`2e0cb6ba`](https://github.com/Space-FALCON-Lab/HYPR.jl/commit/2e0cb6ba6b210d767f51101f3fd2b3aee1b2de4e), tag `v0.3.0` | Runtime pinned by that SpaceAGORA release; the tag adds only documentation and the CI pin |
+| SpaceAGORA | 0.5.0 at [`41cd1f2ef`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/41cd1f2ef7bcd4ef51f556487911e797ca411867), tag `v0.5.0` | Core release that provides `HYPRServices` 2.0.0 and pins this HYPR runtime |
+| HYPR | 0.4.0 at [`c434404d`](https://github.com/Space-FALCON-Lab/HYPR.jl/commit/c434404dd3e4ac3ba351b2a5e0bb77d9be95fb94), tag `v0.4.0` | Runtime pinned by that SpaceAGORA release; the tag adds only documentation and the CI pin |
 | SpaceAGORAHYPR | 0.2.0, in the same SpaceAGORA checkout | Compatibility loader for the historical package name |
-| HYPRServices | 2.0.0 | Adapter contract; accepts provider HYPR 0.3.0 only |
+| HYPRServices | 2.0.0 | Adapter contract; accepts provider HYPR 0.4.0 only |
 
 HYPR's integration CI pins SpaceAGORA
-[`1618216e2`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/1618216e2fd01431be5905f57915d6bf2520fa39), the
-merge of the pull request that admitted HYPR 0.3.0. The v0.4.0 release contains it
+[`f7f3c0bd4`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/f7f3c0bd46c6faccb58a0d1dcb29213dc48c54bd), the
+merge of the pull request that admitted HYPR 0.4.0. The v0.5.0 release contains it
 and pins the same HYPR runtime. That configured CI pair and the bounded walkthrough
 have different scopes; neither establishes compatibility with every source revision
-carrying version 0.4.0, or reproduction of the paper. See [Validation and limits](@ref)
+carrying version 0.5.0, or reproduction of the paper. See [Validation and limits](@ref)
 for the retained evidence and release requirements. The earlier pairs are recorded
-with their releases: HYPR 0.2.0 at `3259e1de` with SpaceAGORA `d5fbe425a` under
-contract 2.0.0 ([v0.2.0](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.2.0)),
-and HYPR 0.1.1 at `39e4cb96` with SpaceAGORA `388b8801` under contract 1.0.0
+with their releases: HYPR 0.3.0 at `2e0cb6ba` with SpaceAGORA `c4bd7b6ab` (v0.4.0)
+under contract 2.0.0 ([v0.3.0](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.3.0)),
+HYPR 0.2.0 at `3259e1de` with SpaceAGORA `d5fbe425a` under contract 2.0.0
+([v0.2.0](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.2.0)), and HYPR
+0.1.1 at `39e4cb96` with SpaceAGORA `388b8801` under contract 1.0.0
 ([v0.1.1](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.1.1)).
 
 ## Loading and ownership
@@ -68,11 +70,11 @@ contract bindings, including historically underscored helper names, instead of
 whole internal simulator modules. Public configuration/result identities remain
 owned by SpaceAGORA.
 
-HYPR 0.3.0 requires a SpaceAGORA revision providing service contract 2.0.0 that
-accepts provider 0.3.0; SpaceAGORA 0.4.0 accepts 0.3.0 only. Contract 2.0.0
+HYPR 0.4.0 requires a SpaceAGORA revision providing service contract 2.0.0 that
+accepts provider 0.4.0; SpaceAGORA 0.5.0 accepts 0.4.0 only. Contract 2.0.0
 requires every planner HYPR supplies to take an explicit `rng`; HYPR 0.1.0 and
 0.1.1, whose planners defaulted to the global stream, pair only with contract 1.0.0,
-and HYPR 0.2.0 pairs with SpaceAGORA 0.3. Legacy
+HYPR 0.2.0 pairs with SpaceAGORA 0.3, and HYPR 0.3.0 with SpaceAGORA 0.4. Legacy
 `using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
 excluded by compatibility metadata and refused by the runtime activation check.
 Contract and provider versions are checked before source method definitions and
@@ -85,8 +87,8 @@ preflight remain refused after a conflict; do not catch the error and continue
 using imported planner methods. Each worker process needs its own supported load.
 
 The contract and its complete consumed/implemented binding inventory are documented
-in SpaceAGORA's [public service reference](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/c4bd7b6aba09eadf27a2851094f66f9d20f71000/docs/src/reference/hypr_services.md).
-The accompanying [motion-planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/c4bd7b6aba09eadf27a2851094f66f9d20f71000/docs/src/user/hypr_planning.md)
+in SpaceAGORA's [public service reference](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/41cd1f2ef7bcd4ef51f556487911e797ca411867/docs/src/reference/hypr_services.md).
+The accompanying [motion-planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/41cd1f2ef7bcd4ef51f556487911e797ca411867/docs/src/user/hypr_planning.md)
 introduces configuration, coordinate conventions and the paper's relationship to
 the current research examples. The source records above identify the
 installation separately from these guides. Aliases preserve original

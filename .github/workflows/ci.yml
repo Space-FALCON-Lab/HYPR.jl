@@ -55,8 +55,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
-          # SpaceAGORA's companion-pin pull request for 0.5.0, whose first commit admits HYPR 0.4.0.
-          ref: 012f810b9c9a40c344974349f50f666847f066cc
+          # SpaceAGORA's merge of its companion-pin pull request for 0.5.0 (#431).
+          ref: f7f3c0bd46c6faccb58a0d1dcb29213dc48c54bd
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
