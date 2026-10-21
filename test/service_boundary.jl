@@ -5,8 +5,9 @@
 # the HYPRServices contract lists: a contract change that drops a name HYPR uses,
 # or a new use of a name the contract does not list, fails here, in this
 # repository's CI and in SpaceAGORA's, which runs it against the core it changes.
-# The check covers the extension's source in ext/, including local aliases and
-# function bodies (test/core_access.jl); the tests' private fixtures are outside it.
+# The check covers the extension's source under ext/, in module code and function
+# bodies, through the bindings of SpaceAGORA modules that test/core_access.jl
+# follows and within the limits it states; the tests' private fixtures are outside it.
 using Test, Random
 include(joinpath(@__DIR__, "core_access.jl"))
 using .CoreAccess
@@ -64,8 +65,10 @@ end
     for (directory, _, files) in walkdir(joinpath(@__DIR__, "..", "ext")), file in files
         endswith(file, ".jl") && push!(sources, joinpath(directory, file))
     end
-    found, used = source_violations(policy, sources)
+    found, used, known = source_violations(policy, sources)
     @test isempty(found)
+    # Every binding of a SpaceAGORA module is one the source check follows.
+    @test isempty(unknown_module_bindings(policy, extension, known))
     # A check that saw nothing would pass too: the source does name the
     # namespaces' entries, the provider checks and the Cloth services.
     @test length(sources) >= 15
