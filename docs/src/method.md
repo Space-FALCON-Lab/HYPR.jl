@@ -18,7 +18,7 @@ This interface can be used without SpaceAGORA. It does not itself define a
 vehicle, collision geometry, gravitational field or controller. The
 `examples/bounded_search.jl` example minimizes a dimensionless quadratic to show
 how these pieces fit together. Its result is the best evaluated candidate,
-`gbest`, rather than the particles' final positions. See [Search API](@ref) for
+`gbest`, rather than the particles' final positions. See [Search API](api.md) for
 ownership, failure and reproducibility requirements.
 
 ## The spacecraft method
@@ -54,7 +54,7 @@ The confirmed September 23 manuscript reports a 500-case static comparison and
 900 dynamic cases. Those are manuscript results, not acceptance results for
 every use of this package. The retained extraction, arithmetic and objective
 compatibility tests establish the narrower properties described in
-[Validation and limits](@ref).
+[Validation and limits](validation.md).
 
 The current SpaceAGORA research comparison helper differs from the manuscript
 protocol. It tracks with a discrete linear Hill–Clohessy–Wiltshire model and

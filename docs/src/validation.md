@@ -24,6 +24,10 @@ shared optimizer dependencies and the finite scope of previous physics tests.
 No numerical acceptance threshold is changed by packaging. Wall-clock timeout
 runs can stop at different points and are not claimed bitwise repeatable.
 
+This page combines maintained test instructions with retained extraction and
+release evidence. The historical records below apply to their named revisions;
+use the [integration guide](integration.md) to select a current source pair.
+
 ## Arithmetic regression tests
 
 `test/arithmetic_regressions.jl` compares exact Float64 bit patterns and subsequent
@@ -67,9 +71,14 @@ then delegates to the unchanged shared engine. Its observer method exists only
 in that test process. This checks the callback contract; it does not establish a
 production fallback path for configured RRT*.
 
-Run against separate core and integration environments:
+Run these commands from the HYPR checkout whose source you want to measure.
+Select a compatible SpaceAGORA checkout using the [integration guide](integration.md),
+then prepare two separate environments. The integration helper selects this
+HYPR checkout explicitly; the core environment loads HYPR without SpaceAGORA.
 
 ```sh
+julia --startup-file=no test/setup_integration.jl /path/to/SpaceAGORA.jl /path/to/integration-env
+julia --startup-file=no -e 'using Pkg; Pkg.activate("/path/to/core-env"); Pkg.develop(path=pwd())'
 python3 scripts/run_coverage.py --core-project /path/to/core-env \
     --integration-project /path/to/integration-env --output /path/to/coverage-output
 ```
@@ -103,7 +112,12 @@ The 0.00625 m/s² acceleration limit follows the existing comparison configurati
 This verifies compatibility, not the paper's complete campaign or RL training.
 
 
-## Final iSpaRo manuscript reconstruction candidate
+## Historical iSpaRo manuscript reconstruction candidate
+
+The following record describes that delivery candidate and its original
+publication sequence. It is retained as evidence, not as instructions for
+publishing the current package. For the confirmed manuscript description,
+including its campaign counts, see [Method and paper](method.md).
 
 The candidate changes the SpaceAGORA RPO extension's `:manuscript` behavior to
 use the final paper's absolute coefficient endpoints `(0.455,1.05,1.75)` and

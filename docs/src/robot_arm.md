@@ -7,7 +7,7 @@ does not run an actuator controller or a contact simulation.
 
 ## Prepare the environment
 
-Follow [Install with SpaceAGORA](integration.md#Install-with-SpaceAGORA) first.
+Follow [Install with SpaceAGORA](integration.md) first.
 It creates `/path/to/hypr-env` with SpaceAGORA and its pinned HYPR package.
 From a checkout of this HYPR repository, run:
 
@@ -18,7 +18,7 @@ JULIA_LOAD_PATH='@:@stdlib' julia --startup-file=no --project=/path/to/hypr-env 
 
 The example file is part of the v0.2.0 source; the v0.1.1 archive does not contain
 it. The installed runtime remains the version selected by SpaceAGORA.
-The [source records](integration.md#Compatibility-and-source-records) identify the
+The [source records](integration.md) identify the
 pair used to check this walkthrough.
 
 ## Define the arm and target

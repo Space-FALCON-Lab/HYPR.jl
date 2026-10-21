@@ -1,5 +1,11 @@
 # Migration
 
+Use this guide when moving an existing SpaceAGORA HYPR integration to the
+standalone HYPR package and its optional adapter. If you only need numerical
+search, start with the [standalone example](index.md) instead. The migration
+keeps the public configuration and result types in SpaceAGORA while moving the
+search implementation behind the package boundary.
+
 ## Owners
 
 | Responsibility | Owner |
@@ -18,19 +24,32 @@ compatibility beyond the retained comparison is claimed.
 
 ## Supported migration
 
-1. Use the SpaceAGORA source pair recorded in the
-   [integration guide](integration.md#Compatibility-and-source-records). HYPR 0.1
-   does not support SpaceAGORA or shim 0.1.
-2. From that SpaceAGORA clone, run
-   `julia scripts/optional_packages.jl setup hypr /path/to/hypr-env`. It verifies
-   the optional source at `packages/robotics/HYPR.jl` and prepares a separate
-   project. The older `scripts/setup_hypr.jl` route remains supported.
-3. Load `SpaceAGORA` and the `SpaceAGORAHYPR` compatibility shim in that project.
-   Existing configured entry points remain accessible through their original
-   SpaceAGORA names. Applications using only the numerical search core load
-   `HYPR` directly and do not install SpaceAGORA.
-4. Preserve the resolved manifest with experiment records. Verify the supported
-   example and the applicable scientific limits before using a new configuration.
+First select the compatible SpaceAGORA and HYPR source pair described in the
+[integration guide](integration.md). From that SpaceAGORA checkout, create the
+separate environment and start Julia in it:
+
+```sh
+julia scripts/optional_packages.jl setup hypr /path/to/hypr-env
+julia --project=/path/to/hypr-env
+```
+
+Setup verifies the optional source at `packages/robotics/HYPR.jl`. The older
+`scripts/setup_hypr.jl` route remains supported. In the Julia session, load the
+core and the compatibility shim:
+
+```julia
+using SpaceAGORA, SpaceAGORAHYPR
+```
+
+Existing configured entry points remain accessible through their original
+SpaceAGORA names. Run the [robot-arm walkthrough](robot_arm.md) or the applicable
+spacecraft example before adapting a new configuration. Preserve the resolved
+manifest and source revisions with the experiment, and check the
+[validation limits](validation.md) when interpreting its results.
+
+For older installations, HYPR 0.1 does not support SpaceAGORA or shim 0.1.
+Applications using only the numerical search core load `HYPR` directly and do
+not need this migration or a SpaceAGORA installation.
 
 A repository publication alone does not establish integrated simulator acceptance.
 Consult the release record and integration PR for the tested revision pair and

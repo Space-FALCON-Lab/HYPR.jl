@@ -19,6 +19,9 @@ For the standalone numerical search, install the versioned source:
 julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.4.0")'
 ```
 
+To work in that project, start Julia with `julia --project=hypr-demo` and then
+run `using HYPR`. The checkout-based example below uses a separate environment.
+
 For spacecraft or robot-arm planning, use the
 [SpaceAGORA setup instructions](docs/src/integration.md#install-with-spaceagora).
 They install the compatible packages together in a separate environment.
@@ -53,7 +56,9 @@ error. For spacecraft rendezvous, start with SpaceAGORA's
 | How does the software relate to the paper? | [Method and citation](docs/src/method.md) |
 | How do I update an older installation? | [Migration](docs/src/migration.md) |
 
-Build the documentation locally with:
+## Work on the package
+
+Run the following commands from the HYPR checkout. Build the documentation with:
 
 ```sh
 julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
