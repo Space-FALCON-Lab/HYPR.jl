@@ -67,16 +67,25 @@ HYPR 0.2.0 at `3259e1de` with SpaceAGORA `d5fbe425a` under contract 2.0.0
 
 `using HYPR` alone neither installs nor loads SpaceAGORA. When both packages are
 loaded, `HYPRSpaceAGORAExt` provides the existing configured RPO and robot-arm
-methods through `SpaceAGORA.HYPRServices` contract 2.0.0. It imports explicit
-contract bindings, including historically underscored helper names, instead of
-whole internal simulator modules. Public configuration/result identities remain
-owned by SpaceAGORA.
+methods through `SpaceAGORA.HYPRServices` contract 3.0.0. It imports explicit
+contract bindings, including historically underscored names, instead of whole
+internal simulator modules, and imports exactly the names the contract lists.
+Public configuration/result identities remain owned by SpaceAGORA.
 
-HYPR 0.4.0 requires a SpaceAGORA revision providing service contract 2.0.0 that
-accepts provider 0.4.0; SpaceAGORA 0.5.0 accepts 0.4.0 only. Contract 2.0.0
-requires every planner HYPR supplies to take an explicit `rng`; HYPR 0.1.0 and
-0.1.1, whose planners defaulted to the global stream, pair only with contract 1.0.0,
-HYPR 0.2.0 pairs with SpaceAGORA 0.3, and HYPR 0.3.0 with SpaceAGORA 0.4. Legacy
+The helpers behind those methods are HYPR's own functions, defined in the
+extension's `RPO` and `RobotArm` modules: path cost, retiming and the
+acceleration-limited reference, the PSO, refinement and warm-start helpers, and
+the robot-arm swarm, refinement, retiming and RRT helpers. SpaceAGORA declared
+them until contract 2.0.0. Reach them through `SpaceAGORAHYPR.RPO` and
+`SpaceAGORAHYPR.RobotArm`, which are the extension's modules. The extension's
+`SwarmPolicy` module names HYPR's own swarm-policy functions.
+
+HYPR 0.5.0 requires a SpaceAGORA revision providing service contract 3.0.0 that
+accepts provider 0.5.0; SpaceAGORA 0.6.0 accepts 0.5.0 only. Contract 2.0.0
+introduced the rule that every planner HYPR supplies takes an explicit `rng`, and
+3.0.0 keeps it; HYPR 0.1.0 and 0.1.1, whose planners defaulted to the global
+stream, pair only with contract 1.0.0, HYPR 0.2.0 pairs with SpaceAGORA 0.3,
+HYPR 0.3.0 with SpaceAGORA 0.4, and HYPR 0.4.0 with SpaceAGORA 0.5. Legacy
 `using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
 excluded by compatibility metadata and refused by the runtime activation check.
 Contract and provider versions are checked before source method definitions and

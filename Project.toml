@@ -1,6 +1,6 @@
 name = "HYPR"
 uuid = "342c8629-b435-4bda-9d24-004c735fb297"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Space-FALCON Lab contributors"]
 
 [deps]
@@ -18,7 +18,7 @@ HYPRSpaceAGORAExt = "SpaceAGORA"
 
 [compat]
 SpaceAGORAHYPR = "0.2"
-SpaceAGORA = "0.4, 0.5"
+SpaceAGORA = "0.5, 0.6"
 StaticArrays = "1"
 julia = "1.12"
 

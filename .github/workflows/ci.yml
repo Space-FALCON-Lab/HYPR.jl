@@ -110,6 +110,8 @@ jobs:
         run: julia --project=.integration-env test/jakob_comparison.jl .comparison-source/SpaceAGORA_RL.jl/src
       - name: Run adapter without the compatibility shim
         run: julia --project=.integration-env test/integration.jl ${{ matrix.order }}
+      - name: Run HYPR's own SpaceAGORA helpers
+        run: julia --project=.integration-env test/extension_helpers.jl
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
