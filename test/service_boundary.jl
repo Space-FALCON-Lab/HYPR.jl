@@ -5,7 +5,11 @@
 # the HYPRServices contract lists: a contract change that drops a name HYPR uses,
 # or a new use of a name the contract does not list, fails here, in this
 # repository's CI and in SpaceAGORA's, which runs it against the core it changes.
+# The check covers the extension's source in ext/, including local aliases and
+# function bodies (test/core_access.jl); the tests' private fixtures are outside it.
 using Test, Random
+include(joinpath(@__DIR__, "core_access.jl"))
+using .CoreAccess
 length(ARGS) == 1 && only(ARGS) in ("core-first", "hypr-first") || error("Pass core-first or hypr-first")
 const ORDER = only(ARGS)
 
@@ -37,55 +41,35 @@ end
     @test SpaceAGORA.hypr_available()
     # The facade's shape and its exact version refusal, as SpaceAGORA's conformance check defines them.
     SpaceAGORA.Conformance.test_service_facade(H; version=extension.REQUIRED_CONTRACT_VERSION)
+
+    # From SpaceAGORA only the facade; from the facade its namespaces and the
+    # provider checks; from each namespace its entries in the two inventories; from
+    # Cloth the three listed services.
     entries = Set{Any}((H.IMPLEMENTED_FUNCTIONS..., H.CONSUMED_SERVICES...))
-    # Each extension namespace imports from one facade namespace.
-    namespaces = (SwarmPolicy=:SwarmPolicy, RPO=:RPO, RobotArm=:RobotArm, PlannerAdapter=:Planner)
-    from_core(value) = try
-        Base.moduleroot(value isa Module ? value : parentmodule(value)) === SpaceAGORA
-    catch
-        false
+    namespaces = (:SwarmPolicy, :RPO, :RobotArm, :Planner)
+    cloth = Set{Any}(H.CLOTH_SERVICES)
+    cloth_modules = Dict(getglobal(H.Cloth, first(entry)) => first(entry) for entry in H.CLOTH_SERVICES)
+    function allowed(m, name)
+        m === SpaceAGORA && return name === :HYPRServices
+        m === H && return name in (namespaces..., :Cloth, :check_provider, :activate!, :CompatibilityError, :require_version)
+        m === H.Cloth && return any(entry -> first(entry) === name, H.CLOTH_SERVICES)
+        haskey(cloth_modules, m) && return (cloth_modules[m], name) in cloth
+        return any(ns -> m === getglobal(H, ns) && (ns, name) in entries, namespaces)
     end
-    imported = 0
-    for (name, namespace) in pairs(namespaces)
-        M = getproperty(extension, name)
-        for binding in names(M; all=true, imported=true, usings=true)
-            binding in (:SpaceAGORA, :HYPR) && continue
-            isdefined(M, binding) && Base.binding_module(M, binding) !== M || continue
-            value = getglobal(M, binding)
-            from_core(value) || continue
-            imported += 1
-            @test (namespace, binding) in entries && getglobal(getproperty(H, namespace), binding) === value
-        end
-    end
-    @test imported >= 100  # refuses a check that silently found no imports
-    # Spelled paths: the extension's aliases of facade namespaces, and the Cloth services.
-    # An alias defined in the extension's main file applies in the files it includes.
+    modules = (SpaceAGORA, H, map(ns -> getglobal(H, ns), namespaces)..., H.Cloth, keys(cloth_modules)...)
+    policy = CorePolicy(SpaceAGORA, allowed, modules)
+
+    @test isempty(runtime_violations(policy, extension))
     sources = String[]
     for (directory, _, files) in walkdir(joinpath(@__DIR__, "..", "ext")), file in files
-        endswith(file, ".jl") || continue
-        push!(sources, join((first(split(line, '#'; limit=2)) for line in eachline(joinpath(directory, file))), '\n'))
+        endswith(file, ".jl") && push!(sources, joinpath(directory, file))
     end
+    found, used = source_violations(policy, sources)
+    @test isempty(found)
+    # A check that saw nothing would pass too: the source does name the
+    # namespaces' entries, the provider checks and the Cloth services.
     @test length(sources) >= 15
-    aliases = Dict(m.captures[1] => Symbol(m.captures[2]) for code in sources for m in
-        eachmatch(r"const\s+([A-Z])\s*=\s*SpaceAGORA\.HYPRServices\.([A-Za-z]+)", code))
-    for code in sources, m in eachmatch(r"const\s+([A-Z])\s*=\s*([A-Z])\s*$"m, code)
-        haskey(aliases, m.captures[2]) && (aliases[m.captures[1]] = aliases[m.captures[2]])
-    end
-    @test aliases == Dict("P" => :Planner, "S" => :RPO, "G" => :RPO)
-    for code in sources
-        for (alias, namespace) in aliases, m in eachmatch(Regex("(?<![A-Za-z0-9_.])" * alias * "\\.([A-Za-z_][A-Za-z0-9_!]*)"), code)
-            @test (namespace, Symbol(m.captures[1])) in entries
-        end
-        for m in eachmatch(r"SpaceAGORA\.HYPRServices\.([A-Za-z_][A-Za-z0-9_!]*)(?:\.([A-Za-z_][A-Za-z0-9_!]*))?", code)
-            head = Symbol(m.captures[1])
-            if head in (:check_provider, :activate!, :CompatibilityError, :require_version, :Cloth)
-                continue
-            end
-            @test head in (:SwarmPolicy, :RPO, :RobotArm, :Planner)
-            m.captures[2] === nothing || @test (head, Symbol(m.captures[2])) in entries
-        end
-        for m in eachmatch(r"getfield\(\s*(?:dynmod|mbmod)\s*,\s*:([A-Za-z_][A-Za-z0-9_!]*)\s*\)", code)
-            @test any(entry -> last(entry) === Symbol(m.captures[1]), H.CLOTH_SERVICES)
-        end
-    end
+    @test count(((m, _),) -> any(ns -> m === getglobal(H, ns), namespaces), used) >= 100
+    @test (H, :check_provider) in used && (H, :activate!) in used
+    @test count(((m, _),) -> haskey(cloth_modules, m), used) == length(H.CLOTH_SERVICES)
 end
