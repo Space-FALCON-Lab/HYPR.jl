@@ -2,12 +2,16 @@ using Test, SpaceAGORA
 mode=only(ARGS)
 const Support=SpaceAGORA.SimulationModel.HYPRSupport
 const CompatibilityError=SpaceAGORA.HYPRServices.CompatibilityError
+# SpaceAGORA releases before the loader's retirement install the SpaceAGORAHYPR
+# compatibility loader beside HYPR; later ones load HYPR directly.
+const LOADER=Base.find_package("SpaceAGORAHYPR")!==nothing
 if mode=="conflict-first"
     # This is the exact activation protocol of the unsupported 0.1 companion.
     @test_throws CompatibilityError Support.activate!()
     using HYPR
 elseif mode=="hypr-first"
-    using HYPR, SpaceAGORAHYPR
+    using HYPR
+    LOADER && @eval using SpaceAGORAHYPR
     @test SpaceAGORA.hypr_available()
     @test_throws CompatibilityError Support.activate!()
 else
@@ -27,7 +31,17 @@ end
     @test_throws CompatibilityError Support.require_hypr()
     @test_throws CompatibilityError SpaceAGORA.make_rpo_configuration(
         planner=SpaceAGORA.HYPRRPOPlanner(SpaceAGORA.RPOPSOConfig()))
-    if mode=="conflict-first"
+    if !LOADER
+        # Direct imports report the conflict through SpaceAGORA's own refusal.
+        refusal=try
+            Support.require_hypr()
+            nothing
+        catch e
+            e
+        end
+        @test refusal isa CompatibilityError
+        @test occursin("Start a fresh process",sprint(showerror,refusal))
+    elseif mode=="conflict-first"
         error_seen=try
             @eval using SpaceAGORAHYPR
             nothing

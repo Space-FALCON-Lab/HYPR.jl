@@ -1,5 +1,8 @@
 using Test
 mode = only(ARGS)
+# SpaceAGORA releases before the loader's retirement install the SpaceAGORAHYPR
+# compatibility loader beside HYPR; later ones load HYPR directly.
+const LOADER = Base.find_package("SpaceAGORAHYPR") !== nothing
     if mode == "core"
         using HYPR
         @test all(id.name != "SpaceAGORA" for id in keys(Base.loaded_modules))
@@ -8,21 +11,23 @@ mode = only(ARGS)
         using SpaceAGORA
         @test !SpaceAGORA.hypr_available()
         using HYPR
-        using SpaceAGORAHYPR
-        packages = [SpaceAGORA, HYPR, Base.get_extension(HYPR, :HYPRSpaceAGORAExt), SpaceAGORAHYPR]
+        LOADER && @eval using SpaceAGORAHYPR
+        packages = [SpaceAGORA, HYPR, Base.get_extension(HYPR, :HYPRSpaceAGORAExt)]
     elseif mode == "hypr-first"
         using HYPR
         @test all(id.name != "SpaceAGORA" for id in keys(Base.loaded_modules))
         using SpaceAGORA
-        using SpaceAGORAHYPR
-        packages = [SpaceAGORA, HYPR, Base.get_extension(HYPR, :HYPRSpaceAGORAExt), SpaceAGORAHYPR]
+        LOADER && @eval using SpaceAGORAHYPR
+        packages = [SpaceAGORA, HYPR, Base.get_extension(HYPR, :HYPRSpaceAGORAExt)]
     elseif mode == "shim-first"
+        LOADER || error("shim-first needs the SpaceAGORAHYPR compatibility loader in this environment")
         using SpaceAGORAHYPR, SpaceAGORA, HYPR
-        packages = [SpaceAGORA, HYPR, Base.get_extension(HYPR, :HYPRSpaceAGORAExt), SpaceAGORAHYPR]
+        packages = [SpaceAGORA, HYPR, Base.get_extension(HYPR, :HYPRSpaceAGORAExt)]
     else
         error("Unknown loading mode")
     end
-if mode != "core"
+if mode != "core" && LOADER
+        push!(packages, SpaceAGORAHYPR)
         partial = Module(:PartiallyInitialized)
         Core.eval(partial, :(begin
             const SwarmPolicy=Main.SpaceAGORAHYPR.SwarmPolicy
@@ -44,6 +49,9 @@ end
     end
     if mode != "core"
         @test SpaceAGORA.hypr_available()
+        @test Base.get_extension(HYPR, :HYPRSpaceAGORAExt).initialized()
+    end
+    if mode != "core" && LOADER
         @test SpaceAGORAHYPR.Adapter.initialized()
         @test SpaceAGORAHYPR.checked_adapter(SpaceAGORAHYPR.Adapter; require_initialized=true) === SpaceAGORAHYPR.Adapter
         @test_throws SpaceAGORA.HYPRServices.CompatibilityError SpaceAGORAHYPR.checked_adapter(nothing; require_initialized=false)
