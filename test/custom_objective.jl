@@ -1,9 +1,10 @@
 module CustomObjectiveTests
 using HYPR, SpaceAGORA, Test, Random
+const G=SpaceAGORA.HYPRServices.RPO
+# No supported name builds station or chaser geometry yet; S reaches them only for that.
 const S=SpaceAGORA.SimulationModel
-const G=S.GuidanceHooks
 const R=Base.get_extension(HYPR,:HYPRSpaceAGORAExt).RPO
-const geo=S.RPOReferenceGeometry(S.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);chaser=S.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
+const geo=G.RPOReferenceGeometry(S.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);chaser=S.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
 const start=[1.,0.,0.]; const goal=[3.,1.,0.]
 const defaults=include("fixtures/rpo_defaults_0_1_0.jl")
 compatible(a,b)=isequal(a,b)
@@ -96,7 +97,7 @@ end
  p,c,changed=R.rpo_try_accept_refinement(path,geo,cfg,current;objective_evaluator=unsafe)
  @test !changed && p === nothing && c === current
  for enabled in (false,true)
-  cf=G.rpo_pso_config(cfg;refinement_enable=enabled)
+  cf=SpaceAGORA.rpo_pso_config(cfg;refinement_enable=enabled)
   p,c,changed=R.rpo_post_refine_path(path,geo,cf;objective_evaluator=bend)
   @test c == bend(p,geo,cf,0.,Inf).total
   @test changed == enabled
