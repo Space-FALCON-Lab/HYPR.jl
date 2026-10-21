@@ -74,9 +74,12 @@ The helpers behind those methods are HYPR's own functions, defined in the
 extension's `RPO` and `RobotArm` modules: path cost, retiming and the
 acceleration-limited reference, the PSO, refinement and warm-start helpers, and
 the robot-arm swarm, refinement, retiming and RRT helpers. SpaceAGORA declared
-them until contract 2.0.0. Reach them through `SpaceAGORAHYPR.RPO` and
-`SpaceAGORAHYPR.RobotArm`, which are the extension's modules. The extension's
-`SwarmPolicy` module names HYPR's own swarm-policy functions.
+them until contract 2.0.0. Reach them through the extension's modules,
+`Base.get_extension(HYPR, :HYPRSpaceAGORAExt).RPO` and `.RobotArm`; that path
+lasts. While SpaceAGORA ships its `SpaceAGORAHYPR` compatibility loader,
+`SpaceAGORAHYPR.RPO` and `SpaceAGORAHYPR.RobotArm` name the same modules; the
+loader goes after SpaceAGORA 0.6.0. The extension's `SwarmPolicy` module names
+HYPR's own swarm-policy functions.
 
 HYPR 0.5.0 requires a SpaceAGORA revision providing service contract 3.0.0 that
 accepts provider 0.5.0; SpaceAGORA 0.6.0 accepts 0.5.0 only. Contract 2.0.0

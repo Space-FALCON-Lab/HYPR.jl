@@ -11,8 +11,11 @@
   acceleration-limited reference (`rpo_path_cost`, `rpo_retime_path`,
   `rpo_retimed_reference`), the PSO, refinement and warm-start helpers, and the
   robot-arm swarm, refinement, retiming and RRT helpers. Their code and results
-  are unchanged. Reach them through `SpaceAGORAHYPR.RPO` and
-  `SpaceAGORAHYPR.RobotArm`; `SpaceAGORA.HYPRServices` and SpaceAGORA's internal
+  are unchanged. Reach them through the extension's modules,
+  `Base.get_extension(HYPR, :HYPRSpaceAGORAExt).RPO` and `.RobotArm`, which is the
+  lasting path. `SpaceAGORAHYPR.RPO` and `SpaceAGORAHYPR.RobotArm` name the same
+  modules while SpaceAGORA ships its `SpaceAGORAHYPR` compatibility loader, which
+  goes after SpaceAGORA 0.6.0. `SpaceAGORA.HYPRServices` and SpaceAGORA's internal
   modules no longer have them.
 - The extension's `SwarmPolicy` module names HYPR's own `hypr_iteration_weights`,
   `hypr_material_improvement` and `hypr_protected_particle_mask`. The methods
