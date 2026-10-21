@@ -103,6 +103,13 @@ A failed extension is refused before incomplete aliases are used. Release
 acceptance requires installation from the published source and hosted checks on
 the version pair; local tests alone do not supply that evidence.
 
+The integration job also checks, in both load orders, that the extension reaches
+SpaceAGORA only through names the contract lists and that SpaceAGORA refuses HYPR
+planning before HYPR loads (`test/service_boundary.jl`), and that a copy of the
+extension requiring another contract version is refused before it defines a
+method (`test/incompatible_contract.jl`). The `core-release-pin` job checks that
+the SpaceAGORA commit the integration job uses is a SpaceAGORA release.
+
 Shared geometry, metrics, RRT and retiming remain in SpaceAGORA. The standalone
 HYPR search core is independent; configured mission planning still consumes the
 simulator's geometry, dynamics and reference services.
