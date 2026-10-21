@@ -105,7 +105,8 @@ acceptance requires installation from the published source and hosted checks on
 the version pair; local tests alone do not supply that evidence.
 
 The integration job also checks, in both load orders, that the extension reaches
-SpaceAGORA only through names the contract lists and that SpaceAGORA refuses HYPR
+SpaceAGORA only through names the contract lists (also through local aliases and in
+function bodies) and that SpaceAGORA refuses HYPR
 planning before HYPR loads (`test/service_boundary.jl`), and that a copy of the
 extension requiring another contract version is refused before it defines a
 method (`test/incompatible_contract.jl`). The `core-release-pin` job checks that
