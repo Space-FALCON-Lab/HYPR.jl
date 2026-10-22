@@ -8,8 +8,9 @@ using Test, HYPR, SpaceAGORA
 @test Base.get_extension(HYPR, :HYPRSpaceAGORAExt).initialized()
 
 # Since SpaceAGORA's HYPRServices 3.0.0 these are HYPR's own functions, defined in
-# its extension. Code that reached them through the compatibility package keeps
-# working: SpaceAGORAHYPR's namespaces are the extension's modules.
+# its extension. Where SpaceAGORA still installs its SpaceAGORAHYPR compatibility
+# loader, code that reached them through it keeps working: the loader's namespaces
+# are the extension's modules, which the testset below checks only there.
 const OWN_RPO = (
     :_rpo_rrt_configured_result, :_rpo_sampling_settings, :rpo_adaptive_pso_config,
     :rpo_estimate_geometry_complexity, :rpo_fit_bezier_fixed_endpoints, :rpo_fuel_proxy_dt_s,

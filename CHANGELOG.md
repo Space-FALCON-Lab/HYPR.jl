@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Tests: the loader checks in `test/precompiled_conflicts.jl`,
+  `test/precompiled_loading.jl`, `test/incompatible_resolution.jl` and
+  `test/extension_helpers.jl` run only where SpaceAGORA still installs its
+  `SpaceAGORAHYPR` compatibility loader, so they also pass against a SpaceAGORA
+  checkout that has retired it. `test/extension_helpers.jl` checks the 75 helpers
+  on the extension's own modules in both cases.
+
 ## 0.5.0 (2026-10-22)
 
 - Breaking: the SpaceAGORA extension requires `HYPRServices` contract 3.0.0 and
