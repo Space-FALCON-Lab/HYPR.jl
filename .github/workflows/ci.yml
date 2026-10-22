@@ -106,8 +106,14 @@ jobs:
           path: .comparison-source
           lfs: false
           sparse-checkout: SpaceAGORA_RL.jl/src
+      # The pinned comparison source loads Plots for its reports. SpaceAGORA 0.6 keeps
+      # Plots in its examples environment, not its root project, so the comparison
+      # runs in a copy of the integration environment with Plots added.
       - name: Verify pinned original and retimed-fuel comparison routes
-        run: julia --project=.integration-env test/jakob_comparison.jl .comparison-source/SpaceAGORA_RL.jl/src
+        run: |
+          cp -R .integration-env .integration-comparison
+          julia --startup-file=no --project=.integration-comparison -e 'using Pkg; Pkg.add(name="Plots", version="1")'
+          julia --project=.integration-comparison test/jakob_comparison.jl .comparison-source/SpaceAGORA_RL.jl/src
       - name: Run adapter without the compatibility shim
         run: julia --project=.integration-env test/integration.jl ${{ matrix.order }}
       - name: Run HYPR's own SpaceAGORA helpers
