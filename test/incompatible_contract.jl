@@ -1,7 +1,7 @@
 # Run in a fresh process in the integration environment. The extension must refuse
 # a SpaceAGORA whose HYPRServices contract is not the one it implements, before it
 # defines a module or a method. This copy of the extension changes only its required
-# contract, to the previous one, 1.0.0, so the pinned core's 2.0.0 is refused.
+# contract, to the previous one, 2.0.0, so the pinned core's 3.0.0 is refused.
 using Test
 using SpaceAGORA
 
@@ -9,9 +9,9 @@ using SpaceAGORA
     H = SpaceAGORA.HYPRServices
     path = joinpath(@__DIR__, "..", "ext", "HYPRSpaceAGORAExt.jl")
     source = read(path, String)
-    expected = "const REQUIRED_CONTRACT_VERSION = v\"2.0.0\""
+    expected = "const REQUIRED_CONTRACT_VERSION = v\"3.0.0\""
     @test count(expected, source) == 1
-    incompatible = replace(source, expected => "const REQUIRED_CONTRACT_VERSION = v\"1.0.0\"")
+    incompatible = replace(source, expected => "const REQUIRED_CONTRACT_VERSION = v\"2.0.0\"")
     failure = try
         # Relative includes in the copy resolve from ext/, as they do for the real
         # extension, so a copy that checked late would define everything.
@@ -27,7 +27,7 @@ using SpaceAGORA
     end
     @test failure isa H.CompatibilityError
     message = failure === nothing ? "" : sprint(showerror, failure)
-    @test occursin("1.0.0", message) && occursin("2.0.0", message)
+    @test occursin("2.0.0", message) && occursin("3.0.0", message)
     copy = Main.HYPRSpaceAGORAExt
     # Importing HYPR in the copy loaded the real extension; the copy is a separate module.
     @test copy !== Base.get_extension(Base.require(Main, :HYPR), :HYPRSpaceAGORAExt)

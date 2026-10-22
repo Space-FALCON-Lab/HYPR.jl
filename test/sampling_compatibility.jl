@@ -1,12 +1,10 @@
 using HYPR, SpaceAGORA, Test
 @testset "Configured sampling forwards to shared kernels" begin
     G=SpaceAGORA.HYPRServices.RPO
-    # No supported name builds station or chaser geometry yet; S reaches them only for that.
-    S=SpaceAGORA.SimulationModel
     points=[0. 0.5 1.;0. 0.4 0.;0. 0. 0.]
     for adaptive in (false,true), distance in (2.,50.)
-        geometry=G.RPOReferenceGeometry(S.RPOStationGeometry(reshape([0.,distance,0.],3,1);keepout_radius_m=.1);
-            chaser=S.RPOCubeSatGeometry(dims_m=(.02,.02,.02)))
+        geometry=G.RPOReferenceGeometry(SpaceAGORA.RPOStationGeometry(reshape([0.,distance,0.],3,1);keepout_radius_m=.1);
+            chaser=SpaceAGORA.RPOCubeSatGeometry(dims_m=(.02,.02,.02)))
         cfg=SpaceAGORA.RPOPSOConfig(sample_ds_m=.09,adaptive_sampling_enable=adaptive)
         settings=G.RPOAdaptiveSamplingSettings(cfg.adaptive_sampling_enable,
             cfg.adaptive_sampling_max_ds_m,cfg.adaptive_sampling_far_clearance_m,

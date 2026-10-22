@@ -1,6 +1,7 @@
 # Run in test/integration_env after developing this HYPR and compatible SpaceAGORA.
 using Test, Random, StaticArrays, SpaceAGORA, HYPR
-const G=SpaceAGORA.HYPRServices.RPO
+# The swarm helpers are HYPR's own, in its extension.
+const G=Base.get_extension(HYPR,:HYPRSpaceAGORAExt).RPO
 const RPOPSOConfig=SpaceAGORA.RPOPSOConfig
 function paper_config()
     cfg = RPOPSOConfig(hypr_mode=:manuscript, n_waypoints=5,n_particles=100,n_iters=60,

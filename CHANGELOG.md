@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.5.0 (unreleased)
+
+- Breaking: the SpaceAGORA extension requires `HYPRServices` contract 3.0.0 and
+  refuses 2.0.0 before it defines its methods. Contract 3.0.0 lists only the names
+  SpaceAGORA's own code calls or exports and the names HYPR uses.
+- The extension's helpers are HYPR's own functions. 75 RPO and robot-arm helpers
+  that SpaceAGORA declared until contract 2.0.0 are now defined in the extension's
+  `RPO` and `RobotArm` modules: path cost, path retiming and the
+  acceleration-limited reference (`rpo_path_cost`, `rpo_retime_path`,
+  `rpo_retimed_reference`), the PSO, refinement and warm-start helpers, and the
+  robot-arm swarm, refinement, retiming and RRT helpers. Their code and results
+  are unchanged. Reach them through the extension's modules,
+  `Base.get_extension(HYPR, :HYPRSpaceAGORAExt).RPO` and `.RobotArm`, which is the
+  lasting path. `SpaceAGORAHYPR.RPO` and `SpaceAGORAHYPR.RobotArm` name the same
+  modules while SpaceAGORA ships its `SpaceAGORAHYPR` compatibility loader, which
+  goes after SpaceAGORA 0.6.0. `SpaceAGORA.HYPRServices` and SpaceAGORA's internal
+  modules no longer have them.
+- The extension's `SwarmPolicy` module names HYPR's own `hypr_iteration_weights`,
+  `hypr_material_improvement` and `hypr_protected_particle_mask`. The methods
+  that forwarded SpaceAGORA's copies of these functions to HYPR are removed.
+- The extension no longer imports `_robot_arm_segment_distance`,
+  `plan_robot_arm_motion` and `rpo_sample_path_bezier`, which it did not use and
+  which contract 3.0.0 no longer lists.
+- SpaceAGORA compatibility is `0.5, 0.6` while the extension is paired with
+  SpaceAGORA's 0.6.0 development line, which still declares 0.5; the runtime
+  contract check refuses SpaceAGORA 0.5 releases, which provide contract 2.0.0.
+  The release narrows it to `0.6`, so that the resolver refuses that pair.
+- Tests: the testsets SpaceAGORA ran on these helpers move to
+  `test/extension_helpers.jl`, which also checks the `SpaceAGORAHYPR` access
+  paths. `test/service_boundary.jl` checks that the names the extension imports or
+  reaches are exactly the contract's lists, and that each is used outside its
+  import. Tests build the station and chaser with SpaceAGORA's public
+  `RPOStationGeometry` and `RPOCubeSatGeometry`.
+
 ## 0.4.0 (2026-10-20)
 
 - SpaceAGORA compatibility moves to `0.4, 0.5`. SpaceAGORA 0.5.0 removes the

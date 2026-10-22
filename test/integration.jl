@@ -18,10 +18,8 @@ end
     # The public configuration types are the ones the extension implements against.
     @test SpaceAGORA.RPOPSOConfig===G.RPOPSOConfig
     @test SpaceAGORA.RobotArmHYPRConfig===SpaceAGORA.HYPRServices.RobotArm.RobotArmHYPRConfig
-    # No supported name builds station or chaser geometry yet; S reaches them only for that.
-    S=SpaceAGORA.SimulationModel
-    geo=G.RPOReferenceGeometry(S.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);
-        chaser=S.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
+    geo=G.RPOReferenceGeometry(SpaceAGORA.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);
+        chaser=SpaceAGORA.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
     cfg=SpaceAGORA.RPOPSOConfig(n_waypoints=1,n_particles=4,n_iters=2,adaptive_enable=false,
         rrt_warmstart_enable=false,sample_ds_m=.2,iteration_runtime_limit_s=Inf)
     a=G.rpo_pso_plan_path([1.,0.,0.],[3.,1.,0.],geo,cfg;rng=MersenneTwister(1))
@@ -36,8 +34,8 @@ end
         hypr_config=SpaceAGORA.RobotArmHYPRConfig(n_particles=4,n_iters=2,n_waypoints=1,n_samples=20),rng=MersenneTwister(2))
     @test isfinite(arm.cost)
     @test all(isfinite,arm.plan.q_ref)
-    # HYPRServices 2.0.0: every planner HYPR supplies requires its random stream.
-    @test SpaceAGORA.HYPRServices.CONTRACT_VERSION == v"2.0.0"
+    # HYPRServices 3.0.0: every planner HYPR supplies requires its random stream.
+    @test SpaceAGORA.HYPRServices.CONTRACT_VERSION == v"3.0.0"
     for planner in (G.rpo_pso_plan_path,G.rpo_rrt_connect_plan_path,G.rpo_rrt_star_plan_path,G.rpo_rrt_connect_bezier_plan_path)
         @test_throws UndefKeywordError planner([1.,0.,0.],[3.,1.,0.],geo,cfg)
     end

@@ -35,28 +35,26 @@ insufficient because Julia does not apply a dependency's `[sources]` transitivel
 
 ## Compatibility and source records
 
-The following records identify the source pair qualified for HYPR 0.4.0 under
-contract 2.0.0. Save the resolved project and manifest with a run; the version
-number alone does not identify a SpaceAGORA research revision.
+The following records identify the source pair for HYPR 0.5.0 under contract
+3.0.0. Save the resolved project and manifest with a run; the version number alone
+does not identify a SpaceAGORA research revision.
 
 | Component | Version or revision | Meaning |
 | --- | --- | --- |
 | Julia | 1.12 | Package compatibility requirement |
-| SpaceAGORA | 0.5.0 at [`41cd1f2ef`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/41cd1f2ef7bcd4ef51f556487911e797ca411867), tag `v0.5.0` | Core release that provides `HYPRServices` 2.0.0 and pins this HYPR runtime |
-| HYPR | 0.4.0 at [`c434404d`](https://github.com/Space-FALCON-Lab/HYPR.jl/commit/c434404dd3e4ac3ba351b2a5e0bb77d9be95fb94), tag `v0.4.0` | Runtime pinned by that SpaceAGORA release; the tag adds only documentation and the CI pin |
+| SpaceAGORA | 0.6.0 development commit [`58b688798`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/58b6887982dfd29ff477d5b3765f36333ad6a8ab) | Core revision that provides `HYPRServices` 3.0.0 and accepts HYPR 0.5.0 |
+| HYPR | 0.5.0 | This release |
 | SpaceAGORAHYPR | 0.2.0, in the same SpaceAGORA checkout | Compatibility loader for the historical package name |
-| HYPRServices | 2.0.0 | Adapter contract; accepts provider HYPR 0.4.0 only |
+| HYPRServices | 3.0.0 | Adapter contract; accepts provider HYPR 0.5.0 only |
 
-HYPR's integration CI pins the SpaceAGORA v0.5.1 release commit,
-[`5c0d566f1`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/5c0d566f1042c446c610ffed3d8c92b64670a7f7), a patch
-release after that one with the same `HYPRServices` contract and the same HYPR pin. Both
-contain [`f7f3c0bd4`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/f7f3c0bd46c6faccb58a0d1dcb29213dc48c54bd),
-the merge of the pull request that admitted HYPR 0.4.0.
-That configured CI pair and the bounded walkthrough
-have different scopes; neither establishes compatibility with every source revision
-carrying a 0.5 version, or reproduction of the paper. See [Validation and limits](@ref)
-for the retained evidence and release requirements. The earlier pairs are recorded
-with their releases: HYPR 0.3.0 at `2e0cb6ba` with SpaceAGORA `c4bd7b6ab` (v0.4.0)
+HYPR's integration CI pins that SpaceAGORA commit until SpaceAGORA v0.6.0 is
+tagged; the release re-pins it to the tag. That configured CI pair and the
+bounded walkthrough have different scopes; neither establishes compatibility with
+every source revision carrying a 0.6 version, or reproduction of the paper. See
+[Validation and limits](@ref) for the retained evidence and release requirements.
+The earlier pairs are recorded with their releases: HYPR 0.4.0 at `c434404d` with
+SpaceAGORA `41cd1f2ef` (v0.5.0) under contract 2.0.0
+([v0.4.0](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.4.0)), HYPR 0.3.0 at `2e0cb6ba` with SpaceAGORA `c4bd7b6ab` (v0.4.0)
 under contract 2.0.0 ([v0.3.0](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.3.0)),
 HYPR 0.2.0 at `3259e1de` with SpaceAGORA `d5fbe425a` under contract 2.0.0
 ([v0.2.0](https://github.com/Space-FALCON-Lab/HYPR.jl/releases/tag/v0.2.0)), and HYPR
@@ -67,16 +65,28 @@ HYPR 0.2.0 at `3259e1de` with SpaceAGORA `d5fbe425a` under contract 2.0.0
 
 `using HYPR` alone neither installs nor loads SpaceAGORA. When both packages are
 loaded, `HYPRSpaceAGORAExt` provides the existing configured RPO and robot-arm
-methods through `SpaceAGORA.HYPRServices` contract 2.0.0. It imports explicit
-contract bindings, including historically underscored helper names, instead of
-whole internal simulator modules. Public configuration/result identities remain
-owned by SpaceAGORA.
+methods through `SpaceAGORA.HYPRServices` contract 3.0.0. It imports explicit
+contract bindings, including historically underscored names, instead of whole
+internal simulator modules, and imports exactly the names the contract lists.
+Public configuration/result identities remain owned by SpaceAGORA.
 
-HYPR 0.4.0 requires a SpaceAGORA revision providing service contract 2.0.0 that
-accepts provider 0.4.0; SpaceAGORA 0.5.0 accepts 0.4.0 only. Contract 2.0.0
-requires every planner HYPR supplies to take an explicit `rng`; HYPR 0.1.0 and
-0.1.1, whose planners defaulted to the global stream, pair only with contract 1.0.0,
-HYPR 0.2.0 pairs with SpaceAGORA 0.3, and HYPR 0.3.0 with SpaceAGORA 0.4. Legacy
+The helpers behind those methods are HYPR's own functions, defined in the
+extension's `RPO` and `RobotArm` modules: path cost, retiming and the
+acceleration-limited reference, the PSO, refinement and warm-start helpers, and
+the robot-arm swarm, refinement, retiming and RRT helpers. SpaceAGORA declared
+them until contract 2.0.0. Reach them through the extension's modules,
+`Base.get_extension(HYPR, :HYPRSpaceAGORAExt).RPO` and `.RobotArm`; that path
+lasts. While SpaceAGORA ships its `SpaceAGORAHYPR` compatibility loader,
+`SpaceAGORAHYPR.RPO` and `SpaceAGORAHYPR.RobotArm` name the same modules; the
+loader goes after SpaceAGORA 0.6.0. The extension's `SwarmPolicy` module names
+HYPR's own swarm-policy functions.
+
+HYPR 0.5.0 requires a SpaceAGORA revision providing service contract 3.0.0 that
+accepts provider 0.5.0; SpaceAGORA 0.6.0 accepts 0.5.0 only. Contract 2.0.0
+introduced the rule that every planner HYPR supplies takes an explicit `rng`, and
+3.0.0 keeps it; HYPR 0.1.0 and 0.1.1, whose planners defaulted to the global
+stream, pair only with contract 1.0.0, HYPR 0.2.0 pairs with SpaceAGORA 0.3,
+HYPR 0.3.0 with SpaceAGORA 0.4, and HYPR 0.4.0 with SpaceAGORA 0.5. Legacy
 `using SpaceAGORAHYPR` uses compatibility package 0.2.0. The old 0.1 companion is
 excluded by compatibility metadata and refused by the runtime activation check.
 Contract and provider versions are checked before source method definitions and
