@@ -11,6 +11,29 @@
 using Test, Random
 include(joinpath(@__DIR__, "core_access.jl"))
 using .CoreAccess
+
+# Names that occur in code outside `import`, `using` and `export`: plain names and
+# the names after a dot in qualified accesses.
+function code_names!(found, ex)
+    if ex isa Symbol
+        push!(found, ex)
+    elseif ex isa Expr && !(ex.head in (:import, :using, :export))
+        if ex.head === :. && length(ex.args) == 2 && ex.args[2] isa QuoteNode
+            code_names!(found, ex.args[1])
+            ex.args[2].value isa Symbol && push!(found, ex.args[2].value)
+        else
+            foreach(arg -> code_names!(found, arg), ex.args)
+        end
+    end
+    return found
+end
+unused_entries(exprs, entries) = (names = foldl(code_names!, exprs; init=Set{Symbol}());
+    sort!([entry for entry in entries if !(last(entry) in names)]))
+# The source with every use of `name` outside imports renamed away.
+without_uses(ex, name) = ex === name ? :__removed_use__ :
+    ex isa QuoteNode && ex.value === name ? QuoteNode(:__removed_use__) :
+    ex isa Expr && !(ex.head in (:import, :using, :export)) ? Expr(ex.head, map(arg -> without_uses(arg, name), ex.args)...) : ex
+
 length(ARGS) == 1 && only(ARGS) in ("core-first", "hypr-first") || error("Pass core-first or hypr-first")
 const ORDER = only(ARGS)
 
@@ -47,7 +70,7 @@ end
     # provider checks; from each namespace its entries in the two inventories; from
     # Cloth the three listed services.
     entries = Set{Any}((H.IMPLEMENTED_FUNCTIONS..., H.CONSUMED_SERVICES...))
-    namespaces = (:SwarmPolicy, :RPO, :RobotArm, :Planner)
+    namespaces = (:RPO, :RobotArm, :Planner)
     cloth = Set{Any}(H.CLOTH_SERVICES)
     cloth_modules = Dict(getglobal(H.Cloth, first(entry)) => first(entry) for entry in H.CLOTH_SERVICES)
     function allowed(m, name)
@@ -72,7 +95,24 @@ end
     # A check that saw nothing would pass too: the source does name the
     # namespaces' entries, the provider checks and the Cloth services.
     @test length(sources) >= 15
-    @test count(((m, _),) -> any(ns -> m === getglobal(H, ns), namespaces), used) >= 100
     @test (H, :check_provider) in used && (H, :activate!) in used
     @test count(((m, _),) -> haskey(cloth_modules, m), used) == length(H.CLOTH_SERVICES)
+
+    # Consistency: the entries this source imports or reaches are exactly the two
+    # inventories, so the contract lists no entry that HYPR does not import.
+    reached = Set{Any}((ns, name) for (m, name) in used for ns in namespaces if m === getglobal(H, ns))
+    @test reached == entries
+    @test isempty(setdiff(entries, reached)) && isempty(setdiff(reached, entries))
+
+    # Use: each entry is named in code outside the import that brings it in (a
+    # method definition, a call or a qualified access). An import kept after its
+    # last use passes the consistency check above but fails here.
+    exprs = [Meta.parseall(read(file, String); filename=file) for file in sources]
+    @test isempty(unused_entries(exprs, entries))
+    # Negative control: keep every import and remove the uses of one consumed
+    # name; only that entry is reported.
+    for entry in ((:RPO, :rpo_path_length), (:RobotArm, :_robot_arm_path_smoothness), (:Planner, :HYPRRPOPlanner))
+        @test entry in entries
+        @test unused_entries(map(ex -> without_uses(ex, last(entry)), exprs), entries) == [entry]
+    end
 end

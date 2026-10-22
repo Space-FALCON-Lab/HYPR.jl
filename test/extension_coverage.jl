@@ -15,6 +15,9 @@ for path in INTEGRATION_CASES
     Base.include(m, joinpath(SA,"test",path))
 end
 
+# The helpers HYPR owns since contract 3.0.0, which those consumer tests no longer reach.
+include("extension_helpers.jl")
+
 include("sampling_compatibility.jl")
 
 include("custom_objective.jl")

@@ -1,10 +1,8 @@
 module CustomObjectiveTests
 using HYPR, SpaceAGORA, Test, Random
 const G=SpaceAGORA.HYPRServices.RPO
-# No supported name builds station or chaser geometry yet; S reaches them only for that.
-const S=SpaceAGORA.SimulationModel
 const R=Base.get_extension(HYPR,:HYPRSpaceAGORAExt).RPO
-const geo=G.RPOReferenceGeometry(S.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);chaser=S.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
+const geo=G.RPOReferenceGeometry(SpaceAGORA.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);chaser=SpaceAGORA.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
 const start=[1.,0.,0.]; const goal=[3.,1.,0.]
 const defaults=include("fixtures/rpo_defaults_0_1_0.jl")
 compatible(a,b)=isequal(a,b)

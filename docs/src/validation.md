@@ -150,7 +150,8 @@ the guide for the model assumptions and unrecovered original experiment inputs.
 
 The delivery CI provider was SpaceAGORA commit
 `e98605617e5b04e7f7163095f527c010b9a5398b`; from HYPR 0.2.0 the integration CI
-pins the SpaceAGORA revision that provides `HYPRServices` contract 2.0.0. The
+pins a SpaceAGORA revision that provides the `HYPRServices` contract HYPR
+implements: 2.0.0 through HYPR 0.4.0 and 3.0.0 from HYPR 0.5.0. The
 delivery provider's companion pins HYPR runtime
 `80a4f53a2fb893989c0ad54093b442a90f88aa7e`; the later HYPR delivery changes only
 this validation guide and the CI provider pin. Publish that runtime, then the
