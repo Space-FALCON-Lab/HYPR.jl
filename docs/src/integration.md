@@ -42,7 +42,7 @@ does not identify a SpaceAGORA research revision.
 | Component | Version or revision | Meaning |
 | --- | --- | --- |
 | Julia | 1.12 | Package compatibility requirement |
-| SpaceAGORA | 0.6.0 development commit [`519d7a40a`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/519d7a40a6d30d01e5daa8025e88f42c6d93b78c) | Core revision that provides `HYPRServices` 3.0.0 and accepts HYPR 0.5.0 |
+| SpaceAGORA | 0.6.0 development commit [`58b688798`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/58b6887982dfd29ff477d5b3765f36333ad6a8ab) | Core revision that provides `HYPRServices` 3.0.0 and accepts HYPR 0.5.0 |
 | HYPR | 0.5.0 | This release |
 | SpaceAGORAHYPR | 0.2.0, in the same SpaceAGORA checkout | Compatibility loader for the historical package name |
 | HYPRServices | 3.0.0 | Adapter contract; accepts provider HYPR 0.5.0 only |

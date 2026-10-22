@@ -65,7 +65,7 @@ jobs:
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
           # SpaceAGORA's HYPRServices 3.0.0 commit, until the v0.6.0 release.
-          ref: 519d7a40a6d30d01e5daa8025e88f42c6d93b78c
+          ref: 58b6887982dfd29ff477d5b3765f36333ad6a8ab
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
