@@ -13,8 +13,10 @@
 
 The shim re-exports the old companion module aliases. Function and type bindings
 in SpaceAGORA retain their owners. Methods implemented by the companion now live
-in the extension's corresponding modules. No general serialized Julia object
-compatibility beyond the retained comparison is claimed.
+in the extension's corresponding modules. The shim stays through SpaceAGORA 0.6.0
+and goes after it; the lasting path to the extension's helpers is
+`Base.get_extension(HYPR, :HYPRSpaceAGORAExt).RPO` and `.RobotArm`. No general
+serialized Julia object compatibility beyond the retained comparison is claimed.
 
 ## Supported migration
 

@@ -6,7 +6,7 @@ const inventory=join([replace(relpath(f,source),'\\'=>'/') * "\0" * bytes2hex(sh
 @test bytes2hex(sha256(inventory)) == "3521bb67d4bfa614b85f7aa47f0e9a938033c48d27625c3c512269a9f03dcb3e"
 include(joinpath(source,"SpaceAGORA_RL.jl"))
 const RL=SpaceAGORA_RL; const S=SpaceAGORA.SimulationModel
-const geo=S.RPOReferenceGeometry(S.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);chaser=S.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
+const geo=SpaceAGORA.HYPRServices.RPO.RPOReferenceGeometry(SpaceAGORA.RPOStationGeometry(reshape([0.,0.,50.],3,1);keepout_radius_m=.25);chaser=SpaceAGORA.RPOCubeSatGeometry(dims_m=(.1,.1,.3)))
 @testset "Jakob August 26 paired PSO comparison" begin
  for waypoints in (0,1)
   cfg=SpaceAGORA.RPOPSOConfig(n_waypoints=waypoints,n_particles=4,n_iters=2,adaptive_enable=false,rrt_warmstart_enable=false,sample_ds_m=.2,iteration_runtime_limit_s=Inf,refinement_enable=true,refinement_rounds=1,retime_accel_limit_enable=true,retime_a_max_mps2=0.00625)

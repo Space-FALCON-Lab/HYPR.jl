@@ -3,8 +3,8 @@
 # Configured RRT* supplies refinement, so ordinary runs do not call evaluate_cost.
 using HYPR, SpaceAGORA, Test, StaticArrays, Random
 const G = SpaceAGORA.HYPRServices.RPO
-# No supported name builds station or chaser geometry yet; S reaches them only for that.
-const S = SpaceAGORA.SimulationModel
+# HYPR's own helpers, such as the path cost, live in its extension.
+const R = Base.get_extension(HYPR, :HYPRSpaceAGORAExt).RPO
 const OBSERVED = Any[]
 const PROBE_PATH = [-1.5 0.0 1.5; 0.0 0.25 0.0; 0.0 0.0 0.0]
 
@@ -20,12 +20,12 @@ end
     goal = SVector(1.5, 0.0, 0.0)
     for distance in (1.0, 10.0), safe_distance in (0.0, 0.2)
         geometry = G.RPOReferenceGeometry(
-            S.RPOStationGeometry(reshape([0.,distance,0.],3,1); keepout_radius_m=0.1);
-            chaser=S.RPOCubeSatGeometry(dims_m=(0.02,0.02,0.02)))
+            SpaceAGORA.RPOStationGeometry(reshape([0.,distance,0.],3,1); keepout_radius_m=0.1);
+            chaser=SpaceAGORA.RPOCubeSatGeometry(dims_m=(0.02,0.02,0.02)))
         cfg = SpaceAGORA.RPOPSOConfig(curve_type=:bezier, w_obs=137.0, w_len=2.5,
             w_fuel=0.25, sample_ds_m=0.09, refinement_enable=false)
         polyline = SpaceAGORA.rpo_pso_config(cfg; curve_type=:polyline)
-        expected = G.rpo_path_cost(PROBE_PATH, geometry, polyline;
+        expected = R.rpo_path_cost(PROBE_PATH, geometry, polyline;
             safe_distance_m=safe_distance)
         previous = length(OBSERVED)
         plan = G.rpo_rrt_star_plan_path(start, goal, geometry, cfg;

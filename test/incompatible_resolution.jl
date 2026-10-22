@@ -5,7 +5,7 @@ sa=abspath(only(ARGS));hypr=normpath(joinpath(@__DIR__,".."))
     mktempdir() do scratch
         old=joinpath(scratch,"old");mkpath(joinpath(old,"src"))
         open(joinpath(old,"Project.toml"),"w") do io
-            TOML.print(io,Dict("name"=>"SpaceAGORA","uuid"=>"afbfb69f-5c0b-4832-b760-43725dff8540","version"=>"0.3.0"))
+            TOML.print(io,Dict("name"=>"SpaceAGORA","uuid"=>"afbfb69f-5c0b-4832-b760-43725dff8540","version"=>"0.5.1"))
         end
         write(joinpath(old,"src","SpaceAGORA.jl"),"module SpaceAGORA; end\n")
         Pkg.activate(joinpath(scratch,"env"))
@@ -23,7 +23,7 @@ sa=abspath(only(ARGS));hypr=normpath(joinpath(@__DIR__,".."))
         @test nameof(typeof(failure)) == :ResolverError
         message=sprint(showerror,failure);println(message)
         @test occursin("SpaceAGORA",message)
-        @test occursin("0.3.0",message)
-        @test occursin("restricted to versions 0.4 - 0.5 by HYPR",message)
+        @test occursin("0.5.1",message)
+        @test occursin("restricted to versions 0.6 by HYPR",message)
     end
 end
