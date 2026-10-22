@@ -46,18 +46,23 @@ const OWN_ROBOT_ARM = (
     :_robot_arm_rrt_segment_samples, :_robot_arm_rrt_shortcut_path, :_robot_arm_rrt_steer,
     :_robot_arm_rrt_warmstart_fields, :_robot_arm_seed_control_points,
 )
-using SpaceAGORAHYPR
+# SpaceAGORA releases before the loader's retirement install the SpaceAGORAHYPR
+# compatibility loader beside HYPR; later ones load HYPR directly.
+const LOADER = Base.find_package("SpaceAGORAHYPR") !== nothing
+LOADER && @eval using SpaceAGORAHYPR
 @testset "Earlier access paths reach HYPR's own helpers" begin
     extension = Base.get_extension(HYPR, :HYPRSpaceAGORAExt)
-    @test SpaceAGORAHYPR.RPO === extension.RPO
-    @test SpaceAGORAHYPR.RobotArm === extension.RobotArm
-    @test SpaceAGORAHYPR.SwarmPolicy === extension.SwarmPolicy
+    if LOADER
+        @test SpaceAGORAHYPR.RPO === extension.RPO
+        @test SpaceAGORAHYPR.RobotArm === extension.RobotArm
+        @test SpaceAGORAHYPR.SwarmPolicy === extension.SwarmPolicy
+    end
     for name in (:hypr_iteration_weights, :hypr_material_improvement, :hypr_protected_particle_mask)
-        @test getglobal(SpaceAGORAHYPR.SwarmPolicy, name) === getglobal(HYPR, name)
+        @test getglobal(extension.SwarmPolicy, name) === getglobal(HYPR, name)
         @test !isdefined(SpaceAGORA.HYPRServices.RPO, name) && !isdefined(SpaceAGORA.HYPRServices.RobotArm, name)
     end
     @test length(OWN_RPO) + length(OWN_ROBOT_ARM) == 75
-    for (namespace, names) in ((SpaceAGORAHYPR.RPO, OWN_RPO), (SpaceAGORAHYPR.RobotArm, OWN_ROBOT_ARM)), name in names
+    for (namespace, names) in ((extension.RPO, OWN_RPO), (extension.RobotArm, OWN_ROBOT_ARM)), name in names
         f = getglobal(namespace, name)
         @test parentmodule(f) === namespace
         @test !isempty(methods(f))
