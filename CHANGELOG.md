@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.0 (unreleased)
+## 0.5.0 (2026-10-22)
 
 - Breaking: the SpaceAGORA extension requires `HYPRServices` contract 3.0.0 and
   refuses 2.0.0 before it defines its methods. Contract 3.0.0 lists only the names
@@ -23,10 +23,12 @@
 - The extension no longer imports `_robot_arm_segment_distance`,
   `plan_robot_arm_motion` and `rpo_sample_path_bezier`, which it did not use and
   which contract 3.0.0 no longer lists.
-- SpaceAGORA compatibility is `0.5, 0.6` while the extension is paired with
-  SpaceAGORA's 0.6.0 development line, which still declares 0.5; the runtime
-  contract check refuses SpaceAGORA 0.5 releases, which provide contract 2.0.0.
-  The release narrows it to `0.6`, so that the resolver refuses that pair.
+- SpaceAGORA compatibility is `0.6`. It was `0.5, 0.6` while the extension was
+  paired with SpaceAGORA's 0.6.0 development line, which still declared 0.5; the
+  release narrows it, so that the resolver, and not only the runtime contract
+  check, refuses SpaceAGORA 0.5, which provides contract 2.0.0. The integration
+  CI pins the SpaceAGORA v0.6.0 release, the first release that pairs with this
+  one.
 - Tests: the testsets SpaceAGORA ran on these helpers move to
   `test/extension_helpers.jl`, which also checks the `SpaceAGORAHYPR` access
   paths. `test/service_boundary.jl` checks that the names the extension imports or

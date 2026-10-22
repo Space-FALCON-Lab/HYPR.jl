@@ -64,8 +64,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: Space-FALCON-Lab/SpaceAGORA.jl
-          # SpaceAGORA's HYPRServices 3.0.0 commit, until the v0.6.0 release.
-          ref: 58b6887982dfd29ff477d5b3765f36333ad6a8ab
+          # The SpaceAGORA v0.6.0 release.
+          ref: 0487e8226107592b19221618f0f21f500cf2aacf
           path: .integration-spaceagora
           lfs: false
           sparse-checkout: |
