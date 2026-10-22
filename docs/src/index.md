@@ -18,7 +18,7 @@ continues from route planning to controller tracking.
 | Search a numerical objective | Installation and first search below |
 | Plan a robot-arm reference | [Robot-arm walkthrough](robot_arm.md) |
 | Install the SpaceAGORA adapter | [SpaceAGORA integration](integration.md) |
-| Check a version pair | [Compatibility and source records](integration.md) |
+| Check a version pair | [Compatibility and source records](integration.md#Compatibility-and-source-records) |
 | Define an objective or policy | [Search API](api.md) |
 | Understand the evidence and its limits | [Validation and limits](validation.md) |
 | Read or cite the spacecraft method | [Method and paper](method.md) |

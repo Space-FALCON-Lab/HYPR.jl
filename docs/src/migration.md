@@ -31,8 +31,8 @@ First select the compatible SpaceAGORA and HYPR source pair described in the
 separate environment and start Julia in it:
 
 ```sh
-julia scripts/optional_packages.jl setup hypr /path/to/hypr-env
-julia --project=/path/to/hypr-env
+julia --startup-file=no scripts/optional_packages.jl setup hypr /path/to/hypr-env
+JULIA_LOAD_PATH='@:@stdlib' julia --startup-file=no --project=/path/to/hypr-env
 ```
 
 Setup verifies the optional source at `packages/robotics/HYPR.jl`. The older
