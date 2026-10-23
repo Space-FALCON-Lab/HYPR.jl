@@ -19,8 +19,8 @@ continues from route planning to controller tracking.
 | Plan a robot-arm reference | [Robot-arm walkthrough](robot_arm.md) |
 | Install the SpaceAGORA adapter | [SpaceAGORA integration](integration.md) |
 | Check a version pair | [Compatibility and source records](integration.md#Compatibility-and-source-records) |
-| Define an objective or policy | [Search API](@ref) |
-| Understand the evidence and its limits | [Validation and limits](@ref) |
+| Define an objective or policy | [Search API](api.md) |
+| Understand the evidence and its limits | [Validation and limits](validation.md) |
 | Read or cite the spacecraft method | [Method and paper](method.md) |
 | Migrate an existing project | [Migration](migration.md) |
 
@@ -50,7 +50,7 @@ particle positions can have moved after the final evaluation and are not the
 reported solution.
 
 Geometry, physical units, constraints and the meaning of success belong to the
-application. Read [Search API](@ref) before defining a policy. The
+application. Read [Search API](api.md) before defining a policy. The
 [method guide](method.md) relates this numerical interface to the spacecraft
 method, with the confirmed citation and the distinction between manuscript
 results and current software validation.
