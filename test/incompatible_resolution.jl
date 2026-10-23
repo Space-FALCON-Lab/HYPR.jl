@@ -24,6 +24,6 @@ sa=abspath(only(ARGS));hypr=normpath(joinpath(@__DIR__,".."))
         message=sprint(showerror,failure);println(message)
         @test occursin("SpaceAGORA",message)
         @test occursin("0.5.1",message)
-        @test occursin("restricted to versions 0.6 by HYPR",message)
+        @test occursin("restricted to versions 0.6 - 0.7 by HYPR",message)
     end
 end
