@@ -47,6 +47,11 @@ does not identify a SpaceAGORA research revision.
 | SpaceAGORAHYPR | 0.2.0, in the same SpaceAGORA checkout | Compatibility loader for the historical package name |
 | HYPRServices | 3.0.0 | Adapter contract; accepts provider HYPR 0.5.0 only |
 
+The current checkout admits SpaceAGORA 0.6 and 0.7 while retaining HYPR 0.5.0
+and service contract 3.0.0. The existing HYPR v0.5.0 tag admits only core 0.6;
+use the exact companion revision recorded by a core checkout when testing 0.7.
+This metadata change does not move the default source pins or release tags.
+
 HYPR's domain and compatibility-shim CI pins the SpaceAGORA v0.6.0 release commit,
 [`0487e8226`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/0487e8226107592b19221618f0f21f500cf2aacf). That configured CI pair and the
 bounded walkthrough have different scopes; neither establishes compatibility with
