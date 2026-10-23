@@ -9,8 +9,12 @@ sa=abspath(only(ARGS));hypr=normpath(joinpath(@__DIR__,".."))
         end
         write(joinpath(old,"src","SpaceAGORA.jl"),"module SpaceAGORA; end\n")
         Pkg.activate(joinpath(scratch,"env"))
+        specs=[PackageSpec(path=hypr),PackageSpec(path=old)]
+        # SpaceAGORA checkouts before the loader's retirement still carry it.
+        loader=joinpath(sa,"packages","SpaceAGORAHYPR")
+        isdir(loader) && push!(specs,PackageSpec(path=loader))
         failure=try
-            Pkg.develop([PackageSpec(path=hypr),PackageSpec(path=old),PackageSpec(path=joinpath(sa,"packages","SpaceAGORAHYPR"))];preserve=Pkg.PRESERVE_ALL)
+            Pkg.develop(specs;preserve=Pkg.PRESERVE_ALL)
             nothing
         catch e
             e

@@ -8,8 +8,9 @@ using Test, HYPR, SpaceAGORA
 @test Base.get_extension(HYPR, :HYPRSpaceAGORAExt).initialized()
 
 # Since SpaceAGORA's HYPRServices 3.0.0 these are HYPR's own functions, defined in
-# its extension. Code that reached them through the compatibility package keeps
-# working: SpaceAGORAHYPR's namespaces are the extension's modules.
+# its extension. Where SpaceAGORA still installs its SpaceAGORAHYPR compatibility
+# loader, code that reached them through it keeps working: the loader's namespaces
+# are the extension's modules, which the testset below checks only there.
 const OWN_RPO = (
     :_rpo_rrt_configured_result, :_rpo_sampling_settings, :rpo_adaptive_pso_config,
     :rpo_estimate_geometry_complexity, :rpo_fit_bezier_fixed_endpoints, :rpo_fuel_proxy_dt_s,
@@ -46,18 +47,23 @@ const OWN_ROBOT_ARM = (
     :_robot_arm_rrt_segment_samples, :_robot_arm_rrt_shortcut_path, :_robot_arm_rrt_steer,
     :_robot_arm_rrt_warmstart_fields, :_robot_arm_seed_control_points,
 )
-using SpaceAGORAHYPR
+# SpaceAGORA releases before the loader's retirement install the SpaceAGORAHYPR
+# compatibility loader beside HYPR; later ones load HYPR directly.
+const LOADER = Base.find_package("SpaceAGORAHYPR") !== nothing
+LOADER && @eval using SpaceAGORAHYPR
 @testset "Earlier access paths reach HYPR's own helpers" begin
     extension = Base.get_extension(HYPR, :HYPRSpaceAGORAExt)
-    @test SpaceAGORAHYPR.RPO === extension.RPO
-    @test SpaceAGORAHYPR.RobotArm === extension.RobotArm
-    @test SpaceAGORAHYPR.SwarmPolicy === extension.SwarmPolicy
+    if LOADER
+        @test SpaceAGORAHYPR.RPO === extension.RPO
+        @test SpaceAGORAHYPR.RobotArm === extension.RobotArm
+        @test SpaceAGORAHYPR.SwarmPolicy === extension.SwarmPolicy
+    end
     for name in (:hypr_iteration_weights, :hypr_material_improvement, :hypr_protected_particle_mask)
-        @test getglobal(SpaceAGORAHYPR.SwarmPolicy, name) === getglobal(HYPR, name)
+        @test getglobal(extension.SwarmPolicy, name) === getglobal(HYPR, name)
         @test !isdefined(SpaceAGORA.HYPRServices.RPO, name) && !isdefined(SpaceAGORA.HYPRServices.RobotArm, name)
     end
     @test length(OWN_RPO) + length(OWN_ROBOT_ARM) == 75
-    for (namespace, names) in ((SpaceAGORAHYPR.RPO, OWN_RPO), (SpaceAGORAHYPR.RobotArm, OWN_ROBOT_ARM)), name in names
+    for (namespace, names) in ((extension.RPO, OWN_RPO), (extension.RobotArm, OWN_ROBOT_ARM)), name in names
         f = getglobal(namespace, name)
         @test parentmodule(f) === namespace
         @test !isempty(methods(f))
