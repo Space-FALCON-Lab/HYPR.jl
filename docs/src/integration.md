@@ -47,7 +47,7 @@ does not identify a SpaceAGORA research revision.
 | SpaceAGORAHYPR | 0.2.0, in the same SpaceAGORA checkout | Compatibility loader for the historical package name |
 | HYPRServices | 3.0.0 | Adapter contract; accepts provider HYPR 0.5.0 only |
 
-HYPR's integration CI pins the SpaceAGORA v0.6.0 release commit,
+HYPR's domain and compatibility-shim CI pins the SpaceAGORA v0.6.0 release commit,
 [`0487e8226`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/0487e8226107592b19221618f0f21f500cf2aacf). That configured CI pair and the
 bounded walkthrough have different scopes; neither establishes compatibility with
 every source revision carrying a 0.6 version, or reproduction of the paper. See
@@ -151,3 +151,25 @@ HYPR with a retimed fuel and wheel objective, then separately evaluates the
 returned trajectory with coupled tracking. It does not add RL training to HYPR.
 The internal dispatch helper is package-owned; no new SpaceAGORA service binding
 or standalone public export is introduced.
+
+
+## Shared integration CI and the released compatibility pair
+
+HYPR keeps SpaceAGORA as a weak dependency. Its standalone tests still run
+without SpaceAGORA on one and four threads. The shared contributor workflow
+uses `SpaceAGORASource.toml` to build a separate integration environment for the
+current HYPR checkout; it does not change the package's dependencies.
+
+The shared workflow and its core input are pinned to
+`a3d786d80a1bce599c1c6415460d29ed268d906b`, a development core snapshot whose
+package version is 0.6.1. This is separate from the released v0.6.0 pair at
+`0487e8226107592b19221618f0f21f500cf2aacf` used by the existing domain and
+compatibility-shim jobs. The release-pin gate certifies that legacy pair only.
+The two revisions deliberately differ; when moving the shared pin, preserve
+the legacy checkout until its own replacement pair has been qualified.
+
+`test/contributor_ci.jl` runs both integration load orders and the extension
+helper suite in fresh processes. The workflow also runs the service-boundary
+checks in both load orders and the incompatible-contract refusal separately.
+The existing mutation controls, coverage thresholds, compiled-image checks,
+comparison checks and shim-compatibility tests remain required.
