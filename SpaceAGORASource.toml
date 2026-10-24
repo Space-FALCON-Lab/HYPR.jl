@@ -1,5 +1,5 @@
 # Shared integration CI pair. The domain/shim job separately retains v0.6.0.
 url = "https://github.com/Space-FALCON-Lab/SpaceAGORA.jl.git"
 uuid = "afbfb69f-5c0b-4832-b760-43725dff8540"
-rev = "a3d786d80a1bce599c1c6415460d29ed268d906b"
-version = "0.6.1"
+rev = "bec28fcc348b48c6e807d007f9a5009e253e8340"
+version = "0.7.0"

@@ -50,7 +50,13 @@ does not identify a SpaceAGORA research revision.
 The current checkout admits SpaceAGORA 0.6 and 0.7 while retaining HYPR 0.5.0
 and service contract 3.0.0. The existing HYPR v0.5.0 tag admits only core 0.6;
 use the exact companion revision recorded by a core checkout when testing 0.7.
-This metadata change does not move the default source pins or release tags.
+The shared contributor workflow and `SpaceAGORASource.toml` pair this checkout
+with SpaceAGORA v0.7.0 at
+[`bec28fcc3`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/bec28fcc348b48c6e807d007f9a5009e253e8340).
+The workflow source and its core input use that same immutable revision.
+For core 0.7, load `using SpaceAGORA, HYPR`; the compatibility loader described
+below belongs to the retained core 0.6 pair. This CI update does not change HYPR's
+version or its existing release tags.
 
 HYPR's domain and compatibility-shim CI pins the SpaceAGORA v0.6.0 release commit,
 [`0487e8226`](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/commit/0487e8226107592b19221618f0f21f500cf2aacf). That configured CI pair and the
@@ -166,8 +172,8 @@ uses `SpaceAGORASource.toml` to build a separate integration environment for the
 current HYPR checkout; it does not change the package's dependencies.
 
 The shared workflow and its core input are pinned to
-`a3d786d80a1bce599c1c6415460d29ed268d906b`, a development core snapshot whose
-package version is 0.6.1. This is separate from the released v0.6.0 pair at
+`bec28fcc348b48c6e807d007f9a5009e253e8340`, the SpaceAGORA v0.7.0 release.
+This is separate from the released v0.6.0 pair at
 `0487e8226107592b19221618f0f21f500cf2aacf` used by the existing domain and
 compatibility-shim jobs. The release-pin gate certifies that legacy pair only.
 The two revisions deliberately differ; when moving the shared pin, preserve

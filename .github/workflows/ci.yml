@@ -4,9 +4,9 @@ permissions:
   contents: read
 jobs:
   contributor:
-    uses: Space-FALCON-Lab/SpaceAGORA.jl/.github/workflows/contributor-ci.yml@a3d786d80a1bce599c1c6415460d29ed268d906b
+    uses: Space-FALCON-Lab/SpaceAGORA.jl/.github/workflows/contributor-ci.yml@bec28fcc348b48c6e807d007f9a5009e253e8340
     with:
-      spaceagora-rev: a3d786d80a1bce599c1c6415460d29ed268d906b
+      spaceagora-rev: bec28fcc348b48c6e807d007f9a5009e253e8340
       kind: companion
       threads: '4'
       load-orders: true
