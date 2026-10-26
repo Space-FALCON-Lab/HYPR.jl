@@ -1,17 +1,18 @@
 # HYPR.jl
 
 HYPR plans paths for spacecraft rendezvous and robot arms through its optional
-SpaceAGORA integration. It uses particle-swarm search to improve candidate paths;
-SpaceAGORA provides geometry, dynamics and the simulation that follows a planned
-reference. The numerical search core can also minimize a caller's objective
-without loading a simulator.
+SpaceAGORA integration. It improves candidate paths with particle-swarm search;
+SpaceAGORA provides the geometry, the dynamics and the simulation that follows a
+planned reference. The numerical search core also works on its own, minimizing an
+objective you supply, without loading a simulator.
 
 ## Choose a first example
 
-Use the standalone example to learn the search API. Use the robot-arm walkthrough
-to connect a physical model and target to a timed reference. SpaceAGORA's
-[spacecraft guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/0487e8226107592b19221618f0f21f500cf2aacf/docs/src/user/hypr_planning.md)
-continues from route planning to controller tracking.
+The standalone example below shows the search API. The robot-arm walkthrough
+connects a physical model and a target to a timed reference. For spacecraft,
+SpaceAGORA's
+[HYPR planning guide](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/v0.7.1/docs/src/user/hypr_planning.md)
+goes from route planning to controller tracking.
 
 | Goal | Start here |
 | --- | --- |
@@ -26,15 +27,15 @@ continues from route planning to controller tracking.
 
 ## Installation and first search
 
-HYPR 0.5.0 is a prerelease for Julia 1.12. It is not registered in General.
-To use the standalone library in your own project:
+HYPR 0.5.0 is a prerelease for Julia 1.12 and is not registered in General.
+To add the standalone library to your own project:
 
 ```sh
 julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-FALCON-Lab/HYPR.jl.git", rev="v0.5.0")'
 ```
 
-Launch Julia with `--project=hypr-demo` and load `HYPR`. To run the repository's
-executable examples, use a checkout instead:
+Start Julia with `--project=hypr-demo` and run `using HYPR`. The examples are in
+the repository, so to run them use a clone:
 
 ```sh
 git clone https://github.com/Space-FALCON-Lab/HYPR.jl.git
@@ -43,14 +44,14 @@ julia --project=. -e 'using Pkg; Pkg.instantiate()'
 julia --project=. examples/bounded_search.jl
 ```
 
-This example minimizes a dimensionless quadratic with an explicit RNG, objective,
-bounds and policy. It prints `best_position` and `cost`. The returned state's
-`gbest` is the best evaluated position and `gbest_cost` is its objective. Its final
-particle positions can have moved after the final evaluation and are not the
-reported solution.
+The example minimizes a dimensionless quadratic with an explicit RNG, objective,
+bounds and policy, and prints `best_position` and `cost`. In the returned state,
+`gbest` is the best position evaluated and `gbest_cost` its objective. The final
+particle positions may have moved after the last evaluation, so they are not the
+solution.
 
-Geometry, physical units, constraints and the meaning of success belong to the
-application. Read [Search API](api.md) before defining a policy. The
+Geometry, physical units, constraints and what counts as success are up to the
+application. Read [Search API](api.md) before writing a policy. The
 [method guide](method.md) relates this numerical interface to the spacecraft
-method, with the confirmed citation and the distinction between manuscript
-results and current software validation.
+method, gives the citation, and separates the paper's results from what the
+software's tests check.

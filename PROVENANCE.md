@@ -3,15 +3,16 @@
 Extracted from Space-FALCON Lab's SpaceAGORA.jl, commit
 `9be384a20dfe28594a35341eed18e6fe945f1049`, specifically
 `packages/SpaceAGORAHYPR/src/`. The original MIT license and copyright are retained
-in LICENSE. Git history and the extraction receipt identify the source; this new
-repository does not pretend to contain the original development history.
+in LICENSE. This repository starts from that extraction and does not include the
+earlier development history, which stays in SpaceAGORA.jl.
 
-Most domain implementation files are unchanged. The shared swarm policy has one
-owner in the core and compatibility forwarders in the extension. The robot-arm
-iteration loop now calls the standalone core search; RPO calls its core movement
-kernel. The source comparison and retained seeded results identify these changes.
+Most domain files are unchanged. The shared swarm policy now lives in the core,
+with forwarding functions in the extension. The robot-arm iteration loop now calls
+the standalone core search, and RPO calls the core movement kernel. The seeded
+comparison described in the [validation guide](docs/src/validation.md) checks that
+these changes kept the results.
 
-The [method and citation guide](docs/src/method.md#citation) records the confirmed
-HyPR manuscript by Jakob Gorisek-Gazze and Giusy Falcone. Cite that paper for the
-method and record the exact software revisions for an experiment. The citation
-does not imply that this package reproduces the complete paper campaign.
+The [method and citation guide](docs/src/method.md#citation) gives the reference
+for the HyPR paper by Jakob Gorisek-Gazze and Giusy Falcone. Cite the paper for
+the method and record the exact software revisions for an experiment. Citing it
+does not mean this package reproduces the paper's complete campaign.

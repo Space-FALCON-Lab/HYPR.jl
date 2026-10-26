@@ -1,29 +1,29 @@
 # Plan a robot-arm reference
 
 This walkthrough moves a three-joint arm toward a reachable Cartesian target.
-HYPR searches joint-space paths and returns a time-indexed reference. You will
-inspect that reference's start, timing and final end-effector error. The example
-does not run an actuator controller or a contact simulation.
+HYPR searches joint-space paths and returns a reference indexed by time; you then
+check the reference's start, its timing and its final end-effector error. The
+example runs no actuator controller and no contact simulation.
 
 ## Prepare the environment
 
-Follow [Install with SpaceAGORA](integration.md#Install-with-SpaceAGORA) first.
-It creates `/path/to/hypr-env` with SpaceAGORA and its pinned HYPR package.
-From a checkout of this HYPR repository, run:
+Follow [Install with SpaceAGORA](integration.md#Install-with-SpaceAGORA) first;
+it creates `/path/to/hypr-env` with SpaceAGORA and the HYPR revision it pins.
+Then, from a clone of this HYPR repository, run:
 
 ```sh
 JULIA_LOAD_PATH='@:@stdlib' julia --startup-file=no --project=/path/to/hypr-env \
   examples/robot_arm_plan.jl
 ```
 
-The example file is part of the v0.2.0 source; the v0.1.1 archive does not contain
-it. The installed runtime remains the version selected by SpaceAGORA.
-The [source records](integration.md#Compatibility-and-source-records) identify the
-pair used to check this walkthrough.
+The example file comes from the clone, but the HYPR code that runs is the
+version installed in the environment, which SpaceAGORA selected. The
+[version table](integration.md#Compatibility-and-source-records) lists those
+pairs.
 
 ## Define the arm and target
 
-The executable example uses only the public SpaceAGORA interface:
+The example uses only SpaceAGORA's public interface:
 
 ```julia
 using SpaceAGORA, HYPR
@@ -35,11 +35,11 @@ q_start = [0.0, 0.3, -0.3]
 target = robot_arm_fk(arm, base, [0.6, -0.4, 0.4]).end_effector_position
 ```
 
-Joint angles are in radians and Cartesian positions are in metres. The default
-base orientation is unchanged, so the target above is expressed in the same world
-frame as the base position. Constructing the target from another joint pose makes
-it reachable for this model. The planner still solves inverse kinematics from
-`q_start`; it receives the Cartesian target, not the joints used to construct it.
+Joint angles are in radians and Cartesian positions in metres. The base keeps its
+default orientation, so the target is in the same world frame as the base
+position. Building the target from another joint pose guarantees that this model
+can reach it. The planner still solves the inverse kinematics from `q_start`: it
+receives only the Cartesian target, not the joints used to build it.
 
 ## Plan the motion
 
@@ -51,20 +51,20 @@ result = plan_robot_arm_motion_hypr(arm, base, q_start, target;
     planner_config=planner, hypr_config=search, rng=MersenneTwister(741))
 ```
 
-The small swarm keeps this example quick. It searches one internal joint-space
-waypoint, then samples the resulting path onto the requested two-second reference.
-Retiming is explicitly disabled, so the nominal duration is retained. No obstacles
-are supplied. These settings explain the example; they are not recommended motion
-limits for a real arm. Use your own model, obstacle geometry and validated search
-and retiming settings for an application.
+The small swarm keeps the example quick. It searches for one intermediate
+joint-space waypoint, then samples the resulting path onto the requested
+two-second reference. Retiming is turned off, so the nominal duration is kept, and
+there are no obstacles. These settings are for the example only, not recommended
+limits for a real arm; an application needs its own model, obstacle geometry, and
+validated search and retiming settings.
 
 ## Read the result
 
-`result.plan` holds the reference. Each column of `q_ref` is a joint configuration
-at the corresponding time in `t_ref_s`; `ee_ref` holds the end-effector positions.
-The executable example verifies finite results, increasing times, the original
-starting pose and a final Cartesian error within the configured inverse-kinematics
-tolerance. It prints these quantities:
+`result.plan` holds the reference. Each column of `q_ref` is the joint
+configuration at the matching time in `t_ref_s`, and `ee_ref` holds the
+end-effector positions. The script checks that the results are finite, the times
+increase, the reference starts at `q_start`, and the final Cartesian error is
+within the planner's inverse-kinematics tolerance (`ik_tol_m`). It then prints:
 
 | Output | Interpretation |
 | --- | --- |
@@ -73,14 +73,15 @@ tolerance. It prints these quantities:
 | `final_reference_error_m` | Distance between the reference endpoint and the requested target |
 | `planning_cost` | The configured search objective, not measured actuator energy or propellant |
 
-You can inspect `result.components` and `result.cost_history` to understand the
-objective and search progress. A finite cost alone does not establish a feasible
-executed motion. This obstacle-free example exercises no collision-avoidance
-claim, and reaching the endpoint in the reference says nothing yet about tracking
-error, contact forces or base disturbance during execution.
+`result.components` and `result.cost_history` show the parts of the objective and
+how the search progressed. A finite cost does not mean the motion can be executed.
+With no obstacles, the example tests no collision avoidance, and a reference that
+reaches the target says nothing yet about tracking error, contact forces or base
+disturbance during execution.
 
-The preferred `RobotArm*` names describe SpaceAGORA's robot model. Older `Cloth*`
-names remain in adapter contracts 1.0.0, 2.0.0 and 3.0.0 for compatibility with the same compliant
-multibody services. The name change does not add MuJoCo contacts. See the
-[SpaceAGORA public API policy](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/0487e8226107592b19221618f0f21f500cf2aacf/docs/src/public_api_policy.md#compliant-multibody-and-robot-arm-names)
-and [validation guide](validation.md) before extending this example.
+Use the `RobotArm*` names for SpaceAGORA's robot model. The older `Cloth*` names
+for the same compliant multibody services remain in the adapter contracts (1.0.0
+through 3.0.0) for compatibility; the new names do not add MuJoCo contacts. Before
+extending this example, read SpaceAGORA's
+[public API policy](https://github.com/Space-FALCON-Lab/SpaceAGORA.jl/blob/v0.7.1/docs/src/public_api_policy.md#compliant-multibody-and-robot-arm-names)
+and the [validation guide](validation.md).
