@@ -27,12 +27,27 @@ Keep `/path/to/hypr-env` outside the SpaceAGORA checkout, and use the same
 environment for the [robot-arm walkthrough](robot_arm.md). Both examples check
 the installation and the interface; their settings are not a validated mission.
 
-SpaceAGORA also keeps the older installer, `julia scripts/setup_hypr.jl
-/path/to/hypr-env`. It installs the HYPR source named in
-`packages/HYPRSource.toml`. To install your own HYPR checkout with that
-installer, set `SPACEAGORA_HYPR_PATH` to it; the checkout must be a HYPR version
-SpaceAGORA supports (0.5.0 for SpaceAGORA 0.6 and 0.7). Record the override with
-your results.
+From a current HYPR checkout, you can also prepare the pair directly:
+
+```sh
+julia --startup-file=no --project=@stdlib scripts/setup_env.jl /path/to/hypr-env
+```
+
+This installs the local HYPR source with the immutable core revision recorded in
+`SpaceAGORASource.toml`. The destination must be empty or previously created by
+this installer, and outside both source checkouts. Setup can download packages.
+To use a local core checkout, set `SPACEAGORA_CORE_PATH` to its absolute path.
+Record that override and both source revisions with your results.
+
+HYPR, EDG and MuJoCo own the same `scripts/setup_env.jl` entry point and use a
+shared generated installation policy. The generated files are checked against
+the core revision in `SharedSupport.toml`; this tooling pin is independent of
+the numerical core pin. SpaceAGORA's current `scripts/setup_hypr.jl` is a
+compatibility shortcut to HYPR's installer. Released SpaceAGORA 0.7.0 and 0.7.1
+retain their original installation implementation and source pins.
+
+See [Migration](migration.md#preserving-an-existing-environment) to retain an older
+project's dependencies and preferences in a new environment.
 
 ## Compatibility and source records
 
@@ -135,6 +150,7 @@ HYPR keeps SpaceAGORA as a weak dependency. The workflow in
 | --- | --- |
 | `core (1)`, `core (4)` | The standalone tests on one and four threads, strict precompilation and compiled loading, `examples/bounded_search.jl`, the arithmetic mutation controls and the coverage-gate failure cases. No SpaceAGORA. |
 | `integration (core-first)`, `integration (hypr-first)` | HYPR with SpaceAGORA v0.6.0 (`0487e8226`), including the `SpaceAGORAHYPR` loader. Details below. |
+| `standalone-installation` | Runs this checkout's installer against its immutable core pin, then checks service boundaries and compiled loading in both load orders. |
 | `core-release-pin` | Checks that the SpaceAGORA commit the integration job uses is a SpaceAGORA release tag and that HYPR's compatibility range admits it. |
 | `docs` | Builds this documentation. |
 | `contributor` | SpaceAGORA's shared contributor workflow with SpaceAGORA v0.7.0 (`bec28fcc3`, the revision also recorded in `SpaceAGORASource.toml`). Its entry point, `test/contributor_ci.jl`, runs `test/integration.jl` in both load orders and `test/extension_helpers.jl`, each in a fresh process. |

@@ -73,3 +73,7 @@ include("input_safety.jl")
 include("arithmetic_regressions.jl")
 
 include("coverage_inventory.jl")
+
+include("installation_tests.jl")
+
+include("migration_installation_tests.jl")

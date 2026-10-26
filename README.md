@@ -21,7 +21,7 @@ julia --project=hypr-demo -e 'using Pkg; Pkg.add(url="https://github.com/Space-F
 
 Then start Julia with `julia --project=hypr-demo` and run `using HYPR`.
 
-For spacecraft or robot-arm planning, install HYPR through SpaceAGORA instead;
+For spacecraft or robot-arm planning, prepare a HYPR–SpaceAGORA environment;
 see [Install with SpaceAGORA](docs/src/integration.md#install-with-spaceagora).
 SpaceAGORA's setup command installs the HYPR revision your SpaceAGORA release
 pins. For SpaceAGORA 0.7 that is not the `v0.5.0` tag, which admits only
