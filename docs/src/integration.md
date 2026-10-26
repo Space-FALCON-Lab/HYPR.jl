@@ -184,3 +184,13 @@ helper suite in fresh processes. The workflow also runs the service-boundary
 checks in both load orders and the incompatible-contract refusal separately.
 The existing mutation controls, coverage thresholds, compiled-image checks,
 comparison checks and shim-compatibility tests remain required.
+
+
+### Updating shared support
+
+`SharedSupport.toml` pins the core source of this repository's generated support
+files. Their headers identify the canonical file and its SHA-256. Change the
+canonical owner in core and run `scripts/sync_companion_support.jl --write` there
+against this checkout, then update the support pin. The Shared companion support
+CI check compares the copies with that immutable source. This support pin is
+separate from the core revision used to run the companion's numerical tests.
