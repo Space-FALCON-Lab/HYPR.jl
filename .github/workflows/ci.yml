@@ -50,6 +50,25 @@ jobs:
         with:
           name: documentation
           path: docs/build/
+  standalone-installation:
+    runs-on: ubuntu-latest
+    env:
+      JULIA_NUM_THREADS: '4'
+      JULIA_LOAD_PATH: '@:@stdlib'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+      - uses: julia-actions/cache@v2
+      - name: Install through the companion-owned entry point
+        run: julia --startup-file=no --project=@stdlib scripts/setup_env.jl "$RUNNER_TEMP/hypr-environment"
+      - name: Check both load orders against the pinned core
+        run: |
+          julia --startup-file=no --project="$RUNNER_TEMP/hypr-environment" test/service_boundary.jl core-first
+          julia --startup-file=no --project="$RUNNER_TEMP/hypr-environment" test/service_boundary.jl hypr-first
+          julia --compiled-modules=strict --pkgimages=existing --project="$RUNNER_TEMP/hypr-environment" test/precompiled_loading.jl core-first
+          julia --compiled-modules=strict --pkgimages=existing --project="$RUNNER_TEMP/hypr-environment" test/precompiled_loading.jl hypr-first
   core-release-pin:
     runs-on: ubuntu-latest
     steps:

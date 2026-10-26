@@ -59,6 +59,29 @@ HYPR 0.1.x works only with service contract 1.0.0, not with the current
 SpaceAGORA adapter or the old loader. Code that uses only the numerical search
 core loads `HYPR` directly and needs neither this migration nor SpaceAGORA.
 
+## Preserving an existing environment
+
+The current HYPR installer can copy an existing SpaceAGORA/HYPR environment into
+a fresh destination. From the HYPR checkout, run:
+
+```sh
+julia --startup-file=no --project=@stdlib scripts/setup_env.jl --migrate-from /path/to/old-env /path/to/new-env
+```
+
+The old environment stays unchanged. Migration preserves its project, manifest
+and local preferences, resolves relative source paths against their old location,
+removes the retired `SpaceAGORAHYPR` loader, and selects this HYPR checkout and the
+configured core together. It refuses environments containing another package
+that still requires the retired loader; update that package first. The new
+destination must be empty and outside both source checkouts and the old
+environment. Failed package resolution is reported, with no fallback to another
+source revision. Once migration has created the destination, ordinary setup can
+retry an interrupted installation.
+
+This preserves environment metadata, not simulation results or arbitrary files
+stored beside it. Keep those in their original location or copy them separately.
+For a core-only project, use SpaceAGORA's `scripts/setup_core.jl` instead.
+
 ## Compatibility validation
 
 The keyword constructor of the standalone settings validates them. The older
