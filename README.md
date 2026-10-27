@@ -70,6 +70,13 @@ Run the standalone tests with `julia --project=. -e 'using Pkg; Pkg.test()'`.
 The [validation guide](docs/src/validation.md) describes the SpaceAGORA
 integration, arithmetic and coverage checks and what each of them shows.
 
+## Contributors
+
+- [Giusy Falcone](https://github.com/gfalcon2)
+- [Jakob Gorisek-Gazze](https://github.com/jgorisek)
+
+These credits include the original HyPR work in SpaceAGORA. [PROVENANCE.md](PROVENANCE.md) records the extraction and links to the method citation.
+
 ## Citation and credits
 
 For the method, cite Jakob Gorisek-Gazze and Giusy Falcone, “HyPR: Safety- and
